@@ -10,3 +10,6 @@
 [submodule "submodules/platform/pms-platform"]
 	path = submodules/platform/pms-platform
 	url = https://github.com/TSVAISolutions/pms-platform.git
+[submodule "ai/ai-security"]
+	path = ai/ai-security
+	url = https://github.com/TSVAISolutions/ai-security.git
