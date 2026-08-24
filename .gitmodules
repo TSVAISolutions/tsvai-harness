@@ -13,3 +13,6 @@
 [submodule "ai/ai-security"]
 	path = ai/ai-security
 	url = https://github.com/TSVAISolutions/ai-security.git
+[submodule "ai/cli"]
+	path = ai/cli
+	url = https://github.com/TSVAISolutions/cli.git
