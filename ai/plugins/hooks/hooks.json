@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "Setup": [
+      {
+        "type": "command",
+        "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh\" >/dev/null || true"
+      }
+    ],
+    "SessionStart": [
+      {
+        "type": "prompt",
+        "prompt": "REQUIRED SESSION CHECKS - run these before anything else.\\n\\nIf the user's message ALREADY specifies an environment - use it, do not ask.\\n- If the user's message does NOT mention an environment - ask once: which environment? (dev, test, uat, demo, load-test).\\n\\nThis is a ONE-TIME check at session start. Once resolved,\\n- Use that environment for ALL subsequent CLI commands in this session.\\n- NEVER switch environments on your own initiative.\\n- Only switch if the user EXPLICITLY asks to change account.\\n- Account selector (CONTROL_PANEL) - use this when the workflow requires different users (e.g., WIRE_INSTRUCTIONS, CONTACT_MATRIX), the checker MUST be a different account than the currently selected one.\\n\\nIn this case, automatically pick a different account from the Credentials Registry and propose it to the user (e.g., \"For the checker step I will use shared account - OK?\").\\n\\nDo NOT use the same for both maker and checker.\",
+        "timeout": 15
+      }
+    ]
+  }
+}
