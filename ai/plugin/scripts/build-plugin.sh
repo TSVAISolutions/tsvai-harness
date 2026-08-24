@@ -1,25 +1,30 @@
 #!/bin/bash
 
-# Build a specific plugin
-# Usage: ./scripts/build-plugin.sh <plugin-name>
+# Build TSVAI plugin
+# Usage: ./scripts/build-plugin.sh
 
-if [ -z "$1" ]; then
-    echo "Usage: ./scripts/build-plugin.sh <plugin-name>"
-    exit 1
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+echo "Building TSVAI plugin..."
+echo ""
+
+# Install dependencies
+if [ -f "$PLUGIN_DIR/package.json" ]; then
+    echo "1. Installing dependencies..."
+    cd "$PLUGIN_DIR"
+    npm install
+    echo "   ✓ Dependencies installed"
 fi
 
-PLUGIN=$1
-
-if [ ! -d "$PLUGIN" ]; then
-    echo "Plugin not found: $PLUGIN"
-    exit 1
+# Run build script if defined
+if [ -f "$PLUGIN_DIR/package.json" ] && grep -q '"build"' "$PLUGIN_DIR/package.json"; then
+    echo "2. Running build script..."
+    cd "$PLUGIN_DIR"
+    npm run build 2>/dev/null || echo "   ⊘ No build script defined"
 fi
 
-echo "Building plugin: $PLUGIN..."
-
-cd "$PLUGIN"
-npm install
-npm run build 2>/dev/null || true
-cd ..
-
+echo ""
 echo "✓ Plugin build complete"

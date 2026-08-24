@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# 1. Installed mode: tsvai.mjs lives alongside this wrapper (ZIP or Claude Code tarball)
+if [[ -f "$SCRIPT_DIR/tsvai.mjs" ]]; then
+  exec node "$SCRIPT_DIR/tsvai.mjs" "$@"
+fi
+
+# 2. Dev fallback: cached bundle in plugin dir
+if [[ -f "$PLUGIN_DIR/.tsvai.mjs" ]]; then
+  exec node "$PLUGIN_DIR/.tsvai.mjs" "$@"
+fi
+
+# 3. Dev fallback: standalone bundle from ai/cli submodule
+AI_DIR="$(cd "$PLUGIN_DIR/.." 2>/dev/null && pwd)" || true
+STANDALONE="${AI_DIR:+$AI_DIR/cli/packages/cli/dist-standalone/tsvai.mjs}"
+if [[ -n "$STANDALONE" && -f "$STANDALONE" ]]; then
+  exec node "$STANDALONE" "$@"
+fi
+
+echo "error: tsvai CLI not found" >&2
+echo "hint:  run 'bash scripts/setup.sh' from the plugin directory" >&2
+exit 1
