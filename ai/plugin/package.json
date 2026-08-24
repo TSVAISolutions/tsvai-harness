@@ -17,6 +17,23 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "bin": {
+    "tsvai": "bin/tsvai"
+  },
+  "files": [
+    "src",
+    "bin",
+    "scripts",
+    "skills",
+    "reference",
+    "hooks",
+    "docs",
+    ".claude-plugin",
+    ".mcp.json",
+    "CLAUDE.md",
+    "CONNECTORS.md",
+    "SAMPLE_PLUGIN.md"
+  ],
   "scripts": {
     "pack:plugin": "bash scripts/build-plugin.sh",
     "pack:claude-code": "bash scripts/build-claude-code.sh",
@@ -47,6 +64,7 @@
   "homepage": "https://github.com/TSVAISolutions/tsvai-harness/tree/main/ai/plugin",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "scope": "@tsvaisolutions"
+    "scope": "@tsvaisolutions",
+    "access": "restricted"
   }
 }
