@@ -1,0 +1,158 @@
+{
+  "name": "tsvai-plugins",
+  "version": "1.0.0",
+  "description": "TSVAI Plugin connectors and integrations for Claude",
+  "author": "TSVAI DevOps Team",
+  "homepage": "https://github.com/TSVAISolutions/tsvai-harness/tree/main/ai/plugins",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TSVAISolutions/tsvai-harness.git",
+    "directory": "ai/plugins"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true,
+    "sampling": false
+  },
+  "tools": [
+    {
+      "name": "analyze-text",
+      "description": "Analyze text content for statistics, keywords, sentiment, and readability",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to analyze"
+          },
+          "operations": {
+            "type": "array",
+            "description": "Analysis operations: wordCount, charCount, stats, keywords",
+            "items": {
+              "type": "string",
+              "enum": ["wordCount", "charCount", "stats", "keywords"]
+            }
+          }
+        },
+        "required": ["text"]
+      }
+    },
+    {
+      "name": "extract-keywords",
+      "description": "Extract top keywords from text with frequency analysis",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to analyze"
+          },
+          "topN": {
+            "type": "number",
+            "description": "Number of keywords to return",
+            "default": 5
+          }
+        },
+        "required": ["text"]
+      }
+    },
+    {
+      "name": "analyze-sentiment",
+      "description": "Analyze sentiment and emotional tone of text",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to analyze"
+          }
+        },
+        "required": ["text"]
+      }
+    },
+    {
+      "name": "get-text-stats",
+      "description": "Get comprehensive text statistics including readability scores",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to analyze"
+          }
+        },
+        "required": ["text"]
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "plugin://sample-plugin",
+      "name": "Sample Plugin",
+      "description": "Text analysis plugin resource",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "plugin://text-analysis",
+      "name": "Text Analysis",
+      "description": "Advanced text analysis capabilities",
+      "mimeType": "application/json"
+    }
+  ],
+  "connectors": [
+    {
+      "type": "claude-code",
+      "enabled": true,
+      "description": "Claude Code integration"
+    },
+    {
+      "type": "rest-api",
+      "enabled": false,
+      "port": 3000,
+      "description": "REST API endpoint"
+    },
+    {
+      "type": "database",
+      "enabled": false,
+      "provider": "postgres",
+      "description": "Database connector"
+    },
+    {
+      "type": "event-bus",
+      "enabled": false,
+      "provider": "kafka",
+      "description": "Event bus connector"
+    }
+  ],
+  "configuration": {
+    "environment": "development",
+    "timeout": 30000,
+    "cacheEnabled": true,
+    "cacheTTL": 3600,
+    "maxWorkers": 4,
+    "logging": {
+      "level": "info",
+      "format": "json"
+    },
+    "security": {
+      "validateInputs": true,
+      "sanitizeOutput": true,
+      "requireAuth": false
+    }
+  },
+  "keywords": [
+    "plugin",
+    "text-analysis",
+    "nlp",
+    "sentiment",
+    "keywords",
+    "statistics",
+    "readability"
+  ],
+  "engines": {
+    "claude": ">=4.5",
+    "node": ">=16.0.0"
+  }
+}
