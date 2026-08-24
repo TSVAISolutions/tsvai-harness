@@ -1,0 +1,140 @@
+{
+  "name": "sample-plugin",
+  "version": "1.0.0",
+  "displayName": "Sample Text Analysis Plugin",
+  "description": "A sample plugin demonstrating text analysis capabilities for TSVAI Solutions",
+  "author": "TSVAI DevOps Team",
+  "license": "MIT",
+  "homepage": "https://github.com/TSVAISolutions/tsvai-harness/tree/main/ai/plugins/sample-plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TSVAISolutions/tsvai-harness.git",
+    "directory": "ai/plugins/sample-plugin"
+  },
+  "keywords": [
+    "text-analysis",
+    "nlp",
+    "sample",
+    "demonstration"
+  ],
+  "capabilities": {
+    "textAnalysis": {
+      "description": "Perform text analysis operations",
+      "methods": [
+        "wordCount",
+        "charCount",
+        "sentiment",
+        "keywordExtraction",
+        "readabilityScore"
+      ]
+    },
+    "dataProcessing": {
+      "description": "Process and transform text data",
+      "formats": ["string", "array", "json"]
+    }
+  },
+  "configuration": {
+    "maxTextLength": {
+      "type": "number",
+      "description": "Maximum text length for analysis",
+      "default": 10000
+    },
+    "enableCache": {
+      "type": "boolean",
+      "description": "Enable result caching",
+      "default": true
+    },
+    "cacheTTL": {
+      "type": "number",
+      "description": "Cache time-to-live in seconds",
+      "default": 3600
+    }
+  },
+  "requirements": {
+    "nodeVersion": ">=16.0.0",
+    "pythonVersion": ">=3.8",
+    "dependencies": {
+      "node": [
+        "axios@^1.0.0",
+        "dotenv@^16.0.0"
+      ],
+      "python": [
+        "requests>=2.28.0",
+        "python-dotenv>=0.20.0"
+      ]
+    }
+  },
+  "entry": {
+    "main": "src/index.js",
+    "types": "src/index.d.ts"
+  },
+  "commands": [
+    {
+      "id": "textanalysis.analyze",
+      "title": "Analyze Text",
+      "description": "Perform analysis on provided text",
+      "category": "Text Analysis"
+    },
+    {
+      "id": "textanalysis.extractKeywords",
+      "title": "Extract Keywords",
+      "description": "Extract keywords from text",
+      "category": "Text Analysis"
+    },
+    {
+      "id": "textanalysis.getSentiment",
+      "title": "Get Sentiment",
+      "description": "Analyze sentiment of text",
+      "category": "Text Analysis"
+    }
+  ],
+  "activationEvents": [
+    "onCommand:textanalysis.analyze",
+    "onCommand:textanalysis.extractKeywords",
+    "onCommand:textanalysis.getSentiment",
+    "onLanguage:plaintext"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "textanalysis.analyze",
+        "title": "Text Analysis: Analyze",
+        "icon": "$(search)"
+      },
+      {
+        "command": "textanalysis.extractKeywords",
+        "title": "Text Analysis: Extract Keywords",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "textanalysis.getSentiment",
+        "title": "Text Analysis: Get Sentiment",
+        "icon": "$(smiley)"
+      }
+    ],
+    "configuration": {
+      "title": "Text Analysis Plugin",
+      "properties": {
+        "textanalysis.maxLength": {
+          "type": "number",
+          "default": 10000,
+          "description": "Maximum text length for analysis"
+        },
+        "textanalysis.enableLogging": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable detailed logging"
+        }
+      }
+    }
+  },
+  "permissions": [
+    "readTextContent",
+    "writeResults",
+    "accessNetwork"
+  ],
+  "tags": ["ai", "text", "nlp", "analysis"],
+  "engines": {
+    "claude": ">=4.5"
+  }
+}
