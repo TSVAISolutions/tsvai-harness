@@ -1,0 +1,14 @@
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/TSVAISolutions/pms-frontend.git
+	branch = main
+
+[submodule "backend"]
+	path = backend
+	url = https://github.com/TSVAISolutions/pms-backend.git
+	branch = main
+
+[submodule "platform"]
+	path = platform
+	url = https://github.com/TSVAISolutions/pms-platform.git
+	branch = main
