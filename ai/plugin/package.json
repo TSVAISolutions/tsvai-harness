@@ -1,5 +1,5 @@
 {
-  "name": "@tsvaisolutions/core-plugin",
+  "name": "core-plugin",
   "version": "1.0.0",
   "description": "TSVAI Core Plugin - Text analysis and data processing",
   "private": true,
