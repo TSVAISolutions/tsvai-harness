@@ -1,7 +1,8 @@
 {
-  "name": "@tsvai/sample-plugin",
+  "name": "@tsvaisolutions/core-plugin",
   "version": "1.0.0",
-  "description": "Sample text analysis plugin demonstrating TSVAI plugin architecture",
+  "description": "TSVAI Core Plugin - Text analysis and data processing",
+  "private": true,
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "author": "TSVAI DevOps Team",
@@ -10,19 +11,21 @@
     "plugin",
     "text-analysis",
     "nlp",
-    "sample"
+    "claude",
+    "mcp"
   ],
   "engines": {
     "node": ">=16.0.0"
   },
   "scripts": {
+    "pack:plugin": "bash scripts/build-plugin.sh",
+    "pack:claude-code": "bash scripts/build-claude-code.sh",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "build": "tsc",
-    "dev": "node examples/basic.js",
     "start": "node src/index.js"
   },
   "dependencies": {},
@@ -36,14 +39,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/TSVAISolutions/tsvai-harness.git",
-    "directory": "ai/plugins/sample-plugin"
+    "directory": "ai/plugin"
   },
   "bugs": {
     "url": "https://github.com/TSVAISolutions/tsvai-harness/issues"
   },
-  "homepage": "https://github.com/TSVAISolutions/tsvai-harness/tree/main/ai/plugins/sample-plugin",
+  "homepage": "https://github.com/TSVAISolutions/tsvai-harness/tree/main/ai/plugin",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "scope": "@tsvai"
+    "scope": "@tsvaisolutions"
   }
 }
