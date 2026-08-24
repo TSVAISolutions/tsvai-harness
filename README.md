@@ -21,9 +21,13 @@ git pull --recurse-submodules
 ```
 harness/
 └── submodules/
-    ├── frontend/         # PMS Frontend (pms-frontend)
-    ├── backend/          # PMS Backend (pms-backend)
-    └── platform/         # PMS Platform (pms-platform)
+    ├── frontend/
+    │   ├── pms-frontend/
+    │   └── admin-dashboard/
+    ├── backend/
+    │   └── pms-backend/
+    └── platform/
+        └── pms-platform/
 ```
 
 ## Working with Submodules

@@ -1,9 +1,12 @@
-[submodule "submodules/frontend"]
-	path = submodules/frontend
+[submodule "submodules/frontend/pms-frontend"]
+	path = submodules/frontend/pms-frontend
 	url = https://github.com/TSVAISolutions/pms-frontend.git
-[submodule "submodules/backend"]
-	path = submodules/backend
+[submodule "submodules/frontend/admin-dashboard"]
+	path = submodules/frontend/admin-dashboard
+	url = https://github.com/TSVAISolutions/admin-dashboard.git
+[submodule "submodules/backend/pms-backend"]
+	path = submodules/backend/pms-backend
 	url = https://github.com/TSVAISolutions/pms-backend.git
-[submodule "submodules/platform"]
-	path = submodules/platform
+[submodule "submodules/platform/pms-platform"]
+	path = submodules/platform/pms-platform
 	url = https://github.com/TSVAISolutions/pms-platform.git
