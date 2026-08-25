@@ -44,7 +44,7 @@ tsvai-harness/
 │   ├── cli/                     # CLI submodule (TSVAISolutions/cli)
 │   ├── ai-security/             # TSVAI security scanner submodule
 │   ├── plugin/                  # Core plugin (skills, CLAUDE.md, build scripts)
-│   └── plugin-lp/               # LP plugin template (white-label, skills)
+│   └── marketplace/             # Claude marketplace submodule
 │
 ├── submodules/                  # All TSVAISolutions repos (submodules)
 │   ├── frontend/                # Frontend applications
@@ -140,9 +140,9 @@ ai/plugin/
 └── package.json               # Minimal package config
 ```
 
-### ai/plugin-lp/
+### ai/marketplace/
 
-White-label LP plugin template with 9 reusable skills
+TSVAI Claude Marketplace submodule for plugin distribution and discovery
 
 ## Plugin Builds
 
