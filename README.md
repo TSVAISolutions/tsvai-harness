@@ -1,65 +1,85 @@
-# Harness Monorepo
+# TSVAI Harness
 
-Central workspace for all TSVAI Solutions repositories using Git submodules.
+Central workspace aggregating all TSVAI Solutions repositories as submodules + AI packages and plugins.
+
+This repository is maintained **for AI agents and developers**. The authoritative entry points are:
+
+- **`CLAUDE.md`** — agent operating instructions, repo structure, and coordination rules
+- **`AGENTS.md`** — live multi-agent coordination table (self-pruning, >24h auto-cleanup)
+- **`CONTEXT.md`** — shared vocabulary and terminology
+- **`docs/onboarding.md`** — quick start guide
+- **`Makefile`** — domain management and common targets
+- **`rules/baseline/`** — development standards and patterns
 
 ## Quick Start
 
-Clone with submodules:
+### 1. Clone with Submodules
 ```bash
-git clone --recursive https://github.com/tsvai-solutions/harness.git
-cd harness
+git clone --recursive https://github.com/TSVAISolutions/tsvai-harness.git
+cd tsvai-harness
 ```
 
-Update submodules:
+### 2. Run Setup
 ```bash
-git submodule update --init --recursive
-git pull --recurse-submodules
+bash scripts/setup.sh
+```
+
+### 3. Get Started
+```bash
+make domains               # List available domains
+make setup frontend        # Clone frontend repos
+make help                  # Show all commands
 ```
 
 ## Repository Structure
 
 ```
-harness/
-├── submodules/
+tsvai-harness/
+├── ai/                    # AI layer (plugins, skills, tools)
+├── submodules/            # TSVAI repos (lazy checkout)
 │   ├── frontend/
-│   │   ├── pms-frontend/
-│   │   └── admin-dashboard/
 │   ├── backend/
-│   │   └── pms-backend/
 │   └── platform/
-│       └── pms-platform/
-└── ai/
-    └── ai-security/
+├── context/               # Architecture & reference docs
+├── .claude/rules/         # Composable rule layers
+├── Makefile               # Development targets
+├── CLAUDE.md              # Coordination guide
+├── AGENTS.md              # Agent tracking
+└── CONTEXT.md             # Shared vocabulary
 ```
 
-## Working with Submodules
+## Key Commands
 
-**Make changes in a submodule:**
 ```bash
-cd backend/api-gateway
-git checkout -b feature/my-feature
-# Make changes
-git add .
-git commit -m "your message"
-git push origin feature/my-feature
-cd ../..
-git add backend/api-gateway
-git commit -m "update submodule"
+make setup <domain>        # Clone domain submodules
+make update <domain>       # Pull latest changes
+make clear <domain>        # Remove working tree
+make status                # Show all repo status
+make plugin-setup          # Setup plugin environment
+make plugin-build          # Build for Claude Code
+make help                  # Show all targets
 ```
 
-**Add a new submodule:**
-```bash
-git submodule add https://github.com/tsvai-solutions/repo.git path/to/repo
-git add .gitmodules path/to/repo
-git commit -m "add repo submodule"
-git push
-```
+## Coordination
 
-**View submodule status:**
-```bash
-git submodule status
-```
+Before starting work:
+1. Read `AGENTS.md` to check who else is working
+2. Add yourself to the table with your area and task
+3. Commit and push `AGENTS.md`
+4. Update as you work
+5. Remove when done
+
+## Documentation
+
+- **`CLAUDE.md`** — Full coordination guide and architecture
+- **`CONTEXT.md`** — Shared vocabulary and terminology
+- **`docs/onboarding.md`** — Quick start for new developers
+- **`rules/baseline/`** — Development standards for backend, frontend, and code review
+
+## Note: Vega Inheritance
+
+Some components (like `ai/cli/`) are submodules inherited from the vega harness. Features specific to vega platforms (LP/GP portals) do not apply to TSVAI. The CLI is reused for TSVAI operations; vega-specific commands can be ignored.
 
 ## Contributing
 
-See individual repository READMEs for specific contribution guidelines.
+See `CLAUDE.md` for coordination rules and `docs/onboarding.md` for getting started.
