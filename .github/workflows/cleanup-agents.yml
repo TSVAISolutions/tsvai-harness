@@ -1,0 +1,70 @@
+name: Cleanup Stale Agents
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    name: Remove stale agent entries
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cleanup stale entries
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          AGENTS_FILE="AGENTS.md"
+          CURRENT_CONTENT=$(cat "$AGENTS_FILE")
+
+          # Check if there are any agent rows (lines starting with |, excluding header)
+          AGENT_ROWS=$(echo "$CURRENT_CONTENT" | grep -E '^\|[^-]' | tail -n +2 || true)
+
+          if [ -z "$AGENT_ROWS" ]; then
+            echo "No agent entries to clean up."
+            exit 0
+          fi
+
+          echo "Found agent entries, checking for stale ones..."
+
+          # Use Claude Haiku to parse dates and remove stale entries
+          CLEANED=$(curl -s https://api.anthropic.com/v1/messages \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "content-type: application/json" \
+            -d "$(jq -n \
+              --arg content "$CURRENT_CONTENT" \
+              --arg now "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              '{
+                model: "claude-haiku-4-5-20251001",
+                max_tokens: 4096,
+                messages: [{
+                  role: "user",
+                  content: ("Current time: " + $now + "\n\nHere is AGENTS.md:\n\n" + $content + "\n\nRemove any rows from the table where the Last Update column is more than 1 hour before the current time. Keep the header row and separator row. Return ONLY the complete file content, nothing else. If no rows need removal, return the file unchanged.")
+                }]
+              }'
+            )" | jq -r '.content[0].text')
+
+          if [ -z "$CLEANED" ] || [ "$CLEANED" = "null" ]; then
+            echo "API call failed or returned empty, skipping."
+            exit 0
+          fi
+
+          # Only commit if content changed
+          if [ "$CURRENT_CONTENT" != "$CLEANED" ]; then
+            echo "$CLEANED" > "$AGENTS_FILE"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add "$AGENTS_FILE"
+            git commit -m "chore: cleanup stale agent entries"
+            git push
+            echo "Cleaned up stale entries."
+          else
+            echo "No stale entries found."
+          fi
