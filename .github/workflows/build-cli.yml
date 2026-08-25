@@ -1,0 +1,102 @@
+name: Build CLI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ai/cli/**'
+      - '.github/workflows/build-cli.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build TSVAI CLI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        working-directory: ai/cli
+        run: bun install
+
+      - name: Build CLI
+        working-directory: ai/cli
+        run: |
+          bun run build
+          bun run build:standalone
+
+      - name: Verify standalone bundle
+        run: |
+          if [ -f ai/cli/packages/cli/dist-standalone/vega.mjs ]; then
+            ls -lh ai/cli/packages/cli/dist-standalone/vega.mjs
+          else
+            echo "Error: Standalone bundle not found"
+            exit 1
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ai/cli/packages/cli/dist-standalone/vega.mjs
+          name: TSVAI CLI ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        working-directory: ai/cli
+        run: bun install
+
+      - name: Lint
+        working-directory: ai/cli
+        run: bun run lint
+
+      - name: Type check
+        working-directory: ai/cli
+        run: bun run typecheck
+
+  test:
+    name: Test CLI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        working-directory: ai/cli
+        run: bun install
+
+      - name: Run tests
+        working-directory: ai/cli
+        run: bun run test
