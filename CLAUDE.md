@@ -40,23 +40,39 @@ If you see a conflict with another agent working in the same area - coordinate o
 
 ```
 tsvai-harness/
-├── ai/                          # AI tools (NOT submodules - actual packages)
-│   ├── cli/                     # CLI submodule (TSVAISolutions/cli)
-│   ├── ai-security/             # TSVAI security scanner submodule
-│   ├── plugin/                  # Core plugin (skills, CLAUDE.md, build scripts)
-│   └── marketplace/             # Claude marketplace submodule
+├── ai/                          # AI LAYER (brain, tools, agents, plugins)
+│   ├── brain-wiki/              # Knowledge base & memory
+│   ├── cli/                     # CLI interface (tsvai command)
+│   ├── ai-security/             # Security scanner & VISS
+│   ├── curator/                 # Content curation & filtering
+│   ├── consilient/              # Consensus & coherence engine
+│   ├── harvester/               # Data harvesting & collection
+│   ├── vi-dashboard/            # VI/Dashboard interface
+│   ├── army-agents/             # Multi-agent coordination
+│   ├── marketplace/             # Claude marketplace integration
+│   ├── plugin/                  # Core plugin system
+│   └── plugin-templates/        # Plugin templates & examples
 │
-├── submodules/                  # All TSVAISolutions repos (submodules)
+├── submodules/                  # ALL TSVAISolutions REPOS (lazy checkout)
 │   ├── frontend/                # Frontend applications
-│   ├── backend/                 # Backend services
-│   └── platform/                # Platform infrastructure
+│   ├── backend/                 # Backend services (30+)
+│   └── platform/                # Platform infrastructure (23+)
 │
-├── context/                     # Architecture docs and deployment flows
-│   └── deployments/
-│       ├── ai-subcook-platform-deployment.md
-│       └── ...
+├── context/                     # RAW REFERENCE DOCS (API specs, DB schema, rules)
+│   ├── deployments/             # Deployment flows
+│   ├── api-specs/               # API specifications
+│   ├── db-schema/               # Database schemas
+│   ├── service-rules/           # Per-service rules
+│   └── guides/                  # Architecture guides
 │
-├── AGENTS.md                    # Active agent tracking (READ FIRST!)
+├── .claude/                     # CLAUDE CONFIGURATION
+│   └── rules/                   # Composable rule layers
+│       ├── global/              # Global rules
+│       ├── baseline/            # Baseline rules
+│       ├── consilient/          # Mined consilient rulesets
+│       └── overrides/           # Override rules per context
+│
+├── AGENTS.md                    # LIVE AGENT COORDINATION (>24h auto-cleanup)
 ├── CLAUDE.md                    # This file
 ├── README.md                    # Main documentation
 └── .gitmodules                  # Submodule configuration
