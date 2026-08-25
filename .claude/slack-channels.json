@@ -1,0 +1,14 @@
+{
+  "channels": {
+    "ai-development": "#ai-development",
+    "platform": "#platform",
+    "frontend": "#frontend",
+    "backend": "#backend",
+    "ops": "#operations"
+  },
+  "notifications": {
+    "on_deployment": true,
+    "on_agent_start": true,
+    "on_agent_complete": true
+  }
+}

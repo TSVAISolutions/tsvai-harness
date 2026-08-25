@@ -1,0 +1,14 @@
+{
+  "model": "claude-opus",
+  "max_tokens": 4096,
+  "auto_complete": false,
+  "theme": "auto",
+  "hooks": {
+    "on_save": "git add . && git commit -m 'auto: changes' || true"
+  },
+  "permissions": {
+    "read_all": true,
+    "write_workspace": true,
+    "run_bash": true
+  }
+}
