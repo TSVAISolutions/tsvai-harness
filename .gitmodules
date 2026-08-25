@@ -16,3 +16,6 @@
 [submodule "ai/cli"]
 	path = ai/cli
 	url = https://github.com/TSVAISolutions/cli.git
+[submodule "ai/marketplace"]
+	path = ai/marketplace
+	url = https://github.com/tsvaisolutions/tsvai-claude-marketplace.git
