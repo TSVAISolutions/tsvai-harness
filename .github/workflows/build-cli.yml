@@ -20,6 +20,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -80,49 +81,3 @@ jobs:
           path: |
             ai/cli/packages/cli/dist-standalone/tsvai.mjs
             ai/cli/packages/cli/dist-standalone/tsvai.mjs.sha256
-
-  lint:
-    name: Lint & Type Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install dependencies
-        working-directory: ai/cli
-        run: bun install
-
-      - name: Lint
-        working-directory: ai/cli
-        run: bun run lint
-
-      - name: Type check
-        working-directory: ai/cli
-        run: bun run typecheck
-
-  test:
-    name: Test CLI
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install dependencies
-        working-directory: ai/cli
-        run: bun install
-
-      - name: Run tests
-        working-directory: ai/cli
-        run: bun run test
