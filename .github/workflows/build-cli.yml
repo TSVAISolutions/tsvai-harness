@@ -2,23 +2,24 @@ name: Build CLI
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'ai/cli/**'
       - '.github/workflows/build-cli.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  build:
-    name: Build TSVAI CLI
+  build-and-release:
+    name: Build and release TSVAI CLI
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          submodules: recursive
-          token: ${{ secrets.TSVAI_PAT }}
+          fetch-depth: 0
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -44,25 +45,47 @@ jobs:
             exit 1
           fi
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Generate SHA256 checksum
+        run: |
+          cd ai/cli/packages/cli/dist-standalone
+          sha256sum vega.mjs > tsvai.mjs.sha256
+          mv vega.mjs tsvai.mjs
+          cat tsvai.mjs.sha256
+
+      - name: Release if CLI version is new
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(cat ai/cli/package.json | grep '"version"' | head -1 | sed 's/.*"version": "\([^"]*\)".*/\1/')
+          TAG="cli-v${VERSION}"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists — skipping."
+            exit 0
+          fi
+
+          echo "Creating release $TAG..."
+          gh release create "$TAG" \
+            --title "TSVAI CLI v${VERSION}" \
+            --notes "Automated release of TSVAI CLI v${VERSION}." \
+            ai/cli/packages/cli/dist-standalone/tsvai.mjs \
+            ai/cli/packages/cli/dist-standalone/tsvai.mjs.sha256
+
+      - name: Upload workflow_dispatch artifacts
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
         with:
-          files: |
-            ai/cli/packages/cli/dist-standalone/vega.mjs
-          name: TSVAI CLI ${{ github.ref_name }}
-          draft: false
-          prerelease: false
+          name: tsvai-cli
+          path: |
+            ai/cli/packages/cli/dist-standalone/tsvai.mjs
+            ai/cli/packages/cli/dist-standalone/tsvai.mjs.sha256
 
   lint:
     name: Lint & Type Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.TSVAI_PAT }}
+      - uses: actions/checkout@v4
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -85,11 +108,7 @@ jobs:
     name: Test CLI
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.TSVAI_PAT }}
+      - uses: actions/checkout@v4
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2

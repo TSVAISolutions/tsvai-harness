@@ -12,9 +12,10 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Build tsvai-plugin zip
+  build-and-release:
+    name: Build and release TSVAI plugin
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,12 +23,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download --repo TSVAISolutions/cli --pattern "tsvai.mjs" --dir ai/plugin --clobber || echo "CLI not found in release"
+          gh release download --repo TSVAISolutions/tsvai-harness --pattern "tsvai.mjs" --dir ai/plugin --clobber 2>/dev/null || echo "CLI not found in harness release, checking cli repo..."
+          if [ ! -f ai/plugin/tsvai.mjs ]; then
+            gh release download --repo TSVAISolutions/cli --pattern "tsvai.mjs" --dir ai/plugin --clobber 2>/dev/null || echo "CLI release not available yet, continuing without it"
+          fi
           if [ -f ai/plugin/tsvai.mjs ]; then
             mv ai/plugin/tsvai.mjs ai/plugin/.tsvai.mjs
           fi
 
-      - name: Stage plugin
+      - name: Build plugin (production)
         run: |
           PLUGIN_DIR="ai/plugin"
           STAGE_DIR="$PLUGIN_DIR/.plugin-stage"
@@ -38,123 +42,95 @@ jobs:
           cp -r "$PLUGIN_DIR/.claude-plugin" "$STAGE_DIR/"
           cp "$PLUGIN_DIR/CLAUDE.md" "$STAGE_DIR/"
           cp -r "$PLUGIN_DIR/skills" "$STAGE_DIR/"
-          cp -r "$PLUGIN_DIR/reference" "$STAGE_DIR/"
+          [ -d "$PLUGIN_DIR/reference" ] && cp -r "$PLUGIN_DIR/reference" "$STAGE_DIR/"
 
           # Copy optional files
           [ -f "$PLUGIN_DIR/.mcp.json" ] && cp "$PLUGIN_DIR/.mcp.json" "$STAGE_DIR/"
           [ -f "$PLUGIN_DIR/CONNECTORS.md" ] && cp "$PLUGIN_DIR/CONNECTORS.md" "$STAGE_DIR/"
-          [ -f "$PLUGIN_DIR/SAMPLE_PLUGIN.md" ] && cp "$PLUGIN_DIR/SAMPLE_PLUGIN.md" "$STAGE_DIR/"
           [ -f "$PLUGIN_DIR/hooks/hooks.json" ] && mkdir -p "$STAGE_DIR/hooks" && cp "$PLUGIN_DIR/hooks/hooks.json" "$STAGE_DIR/hooks/"
 
           # Copy CLI if available
           if [ -f "$PLUGIN_DIR/.tsvai.mjs" ]; then
-            cp "$PLUGIN_DIR/.tsvai.mjs" "$STAGE_DIR/bin/tsvai.mjs"
-            cat > "$STAGE_DIR/bin/tsvai" <<'WRAPPER'
-#!/usr/bin/env bash
-exec node "$(dirname "$0")/tsvai.mjs" "$@"
-WRAPPER
+            cp "$PLUGIN_DIR/.tsvai.mjs" "$STAGE_DIR/bin/tsvai"
             chmod +x "$STAGE_DIR/bin/tsvai"
           fi
 
-      - name: Create zip
-        run: |
-          sudo apt-get -qq install -y zip 2>/dev/null || true
-          cd ai/plugin/.plugin-stage
-          zip -qr ../../../tsvai-plugin.zip .
+          # Create zip
+          cd "$STAGE_DIR"
+          zip -r ../tsvai-plugin.zip . -q
+          cd - >/dev/null
+          ls -lh "$PLUGIN_DIR/tsvai-plugin.zip"
 
-      - name: Upload to latest cli release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Try to upload to TSVAISolutions/cli latest release
-          TAG=$(gh release list --repo TSVAISolutions/cli --limit 1 --json tagName -q '.[0].tagName' 2>/dev/null || echo "")
-
-          if [ -z "$TAG" ]; then
-            echo "No releases found in TSVAISolutions/cli, skipping upload"
-          else
-            gh release delete-asset --repo TSVAISolutions/cli "$TAG" tsvai-plugin.zip --yes 2>/dev/null || true
-            gh release upload --repo TSVAISolutions/cli "$TAG" tsvai-plugin.zip
-            echo "✓ Uploaded tsvai-plugin.zip to release $TAG"
-          fi
-
-      - name: Cleanup
-        run: rm -rf ai/plugin/.plugin-stage ai/plugin/.tsvai.mjs tsvai-plugin.zip
-
-  build-dev:
-    name: Build tsvai-dev plugin zip
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download standalone CLI from cli repo
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release download --repo TSVAISolutions/cli --pattern "tsvai.mjs" --dir ai/plugin --clobber || echo "CLI not found in release"
-          if [ -f ai/plugin/tsvai.mjs ]; then
-            mv ai/plugin/tsvai.mjs ai/plugin/.tsvai.mjs
-          fi
-
-      - name: Stage dev plugin
+      - name: Build plugin (dev variant)
         run: |
           PLUGIN_DIR="ai/plugin"
-          STAGE_DIR="$PLUGIN_DIR/.plugin-stage"
+          STAGE_DIR="$PLUGIN_DIR/.plugin-stage-dev"
           rm -rf "$STAGE_DIR"
           mkdir -p "$STAGE_DIR/bin"
 
-          # Copy core plugin files
+          # Copy all files
           cp -r "$PLUGIN_DIR/.claude-plugin" "$STAGE_DIR/"
           cp "$PLUGIN_DIR/CLAUDE.md" "$STAGE_DIR/"
           cp -r "$PLUGIN_DIR/skills" "$STAGE_DIR/"
-          cp -r "$PLUGIN_DIR/reference" "$STAGE_DIR/"
+          [ -d "$PLUGIN_DIR/reference" ] && cp -r "$PLUGIN_DIR/reference" "$STAGE_DIR/"
 
-          # Copy optional files
-          [ -f "$PLUGIN_DIR/.mcp.json" ] && cp "$PLUGIN_DIR/.mcp.json" "$STAGE_DIR/"
-          [ -f "$PLUGIN_DIR/CONNECTORS.md" ] && cp "$PLUGIN_DIR/CONNECTORS.md" "$STAGE_DIR/"
-          [ -f "$PLUGIN_DIR/SAMPLE_PLUGIN.md" ] && cp "$PLUGIN_DIR/SAMPLE_PLUGIN.md" "$STAGE_DIR/"
-          [ -f "$PLUGIN_DIR/hooks/hooks.json" ] && mkdir -p "$STAGE_DIR/hooks" && cp "$PLUGIN_DIR/hooks/hooks.json" "$STAGE_DIR/hooks/"
+          # Update manifest to [DEV]
+          sed -i 's/"name": "\(.*\)"/"name": "[DEV] \1"/' "$STAGE_DIR/.claude-plugin/plugin.json"
 
           # Copy CLI if available
           if [ -f "$PLUGIN_DIR/.tsvai.mjs" ]; then
-            cp "$PLUGIN_DIR/.tsvai.mjs" "$STAGE_DIR/bin/tsvai.mjs"
-            cat > "$STAGE_DIR/bin/tsvai" <<'WRAPPER'
-#!/usr/bin/env bash
-exec node "$(dirname "$0")/tsvai.mjs" "$@"
-WRAPPER
+            cp "$PLUGIN_DIR/.tsvai.mjs" "$STAGE_DIR/bin/tsvai"
             chmod +x "$STAGE_DIR/bin/tsvai"
           fi
 
-          # Patch plugin name to "tsvai-dev"
-          node -e "
-            const fs = require('fs');
-            const p = '$STAGE_DIR/.claude-plugin/plugin.json';
-            const j = JSON.parse(fs.readFileSync(p, 'utf8'));
-            j.name = 'tsvai-dev';
-            j.displayName = '[DEV] ' + (j.displayName || j.name);
-            j.description = '[DEV] ' + j.description;
-            fs.writeFileSync(p, JSON.stringify(j, null, 2) + '\n');
-          "
+          # Create zip
+          cd "$STAGE_DIR"
+          zip -r ../tsvai-dev-plugin.zip . -q
+          cd - >/dev/null
+          ls -lh "$PLUGIN_DIR/tsvai-dev-plugin.zip"
 
-      - name: Create zip
-        run: |
-          sudo apt-get -qq install -y zip 2>/dev/null || true
-          cd ai/plugin/.plugin-stage
-          zip -qr ../../../tsvai-dev-plugin.zip .
-
-      - name: Upload to latest cli release
+      - name: Release if plugin.json version is new
+        if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Try to upload to TSVAISolutions/cli latest release
-          TAG=$(gh release list --repo TSVAISolutions/cli --limit 1 --json tagName -q '.[0].tagName' 2>/dev/null || echo "")
+          VERSION=$(jq -r '.version' ai/plugin/.claude-plugin/plugin.json)
+          TAG="plugin-v${VERSION}"
 
-          if [ -z "$TAG" ]; then
-            echo "No releases found in TSVAISolutions/cli, skipping upload"
-          else
-            gh release delete-asset --repo TSVAISolutions/cli "$TAG" tsvai-dev-plugin.zip --yes 2>/dev/null || true
-            gh release upload --repo TSVAISolutions/cli "$TAG" tsvai-dev-plugin.zip
-            echo "✓ Uploaded tsvai-dev-plugin.zip to release $TAG"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists — skipping."
+            exit 0
           fi
 
+          echo "Creating release $TAG..."
+          NOTES_FILE="$(mktemp)"
+          cat > "$NOTES_FILE" <<NOTES
+          Automated release of TSVAI plugin v${VERSION}.
+
+          Two variants are attached:
+
+          - \`tsvai-plugin.zip\` — production plugin (stable)
+          - \`tsvai-dev-plugin.zip\` — \`[DEV]\` manifest, installs alongside production for testing
+          NOTES
+          sed -i 's/^          //' "$NOTES_FILE"
+
+          gh release create "$TAG" \
+            --title "TSVAI Plugin v${VERSION}" \
+            --notes-file "$NOTES_FILE" \
+            ai/plugin/tsvai-plugin.zip \
+            ai/plugin/tsvai-dev-plugin.zip
+
+      - name: Upload workflow_dispatch artifacts
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tsvai-plugin-zips
+          path: |
+            ai/plugin/tsvai-plugin.zip
+            ai/plugin/tsvai-dev-plugin.zip
+
       - name: Cleanup
-        run: rm -rf ai/plugin/.plugin-stage ai/plugin/.tsvai.mjs tsvai-dev-plugin.zip
+        if: always()
+        run: |
+          rm -rf ai/plugin/.plugin-stage ai/plugin/.plugin-stage-dev ai/plugin/.tsvai.mjs
+          rm -f ai/plugin/tsvai-plugin.zip ai/plugin/tsvai-dev-plugin.zip
