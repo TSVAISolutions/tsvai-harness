@@ -14,4 +14,3 @@
 
 | Agent | Area | Task | Since | Last Update |
 |-------|------|------|-------|-------------|
-| claude-haiku-1 | ai/army-agents | Phase 4: Monitoring & Logging (COMPLETE) | 2026-08-28T02:45:00Z | 2026-08-28T06:30:00Z |
