@@ -14,4 +14,3 @@
 
 | Agent | Area | Task | Since | Last Update |
 |-------|------|------|-------|-------------|
-| claude-haiku-1 | ai/plugin | Phase 3: testing & documentation | 2026-08-27T23:30:00Z | 2026-08-28T01:30:00Z |
