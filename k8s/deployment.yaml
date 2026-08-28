@@ -55,9 +55,6 @@ spec:
         - name: api
           containerPort: 3000
           protocol: TCP
-        - name: dashboard
-          containerPort: 3001
-          protocol: TCP
 
         env:
         - name: NODE_ENV

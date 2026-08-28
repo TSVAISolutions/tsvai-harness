@@ -23,24 +23,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: tsvai-dashboard
-  namespace: tsvai
-  labels:
-    app: tsvai-harness
-    component: dashboard
-spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 3001
-    targetPort: dashboard
-    protocol: TCP
-  selector:
-    app: tsvai-harness
----
-apiVersion: v1
-kind: Service
-metadata:
   name: tsvai-harness-loadbalancer
   namespace: tsvai
   labels:
@@ -51,10 +33,6 @@ spec:
   - name: api
     port: 80
     targetPort: api
-    protocol: TCP
-  - name: dashboard
-    port: 3001
-    targetPort: dashboard
     protocol: TCP
   selector:
     app: tsvai-harness
@@ -73,11 +51,6 @@ spec:
     port: 3000
     targetPort: api
     nodePort: 30000
-    protocol: TCP
-  - name: dashboard
-    port: 3001
-    targetPort: dashboard
-    nodePort: 30001
     protocol: TCP
   selector:
     app: tsvai-harness
