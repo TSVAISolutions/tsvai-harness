@@ -700,8 +700,8 @@
         const grid = document.getElementById('dashboard-grid');
         grid.innerHTML = '';
 
-        // Create sample widgets
-        const widgets = this.getSampleWidgets();
+        // Get widgets based on current dashboard
+        const widgets = this.getWidgetsForDashboard(this.currentDashboard);
 
         widgets.forEach(widget => {
           const el = document.createElement('div');
@@ -711,83 +711,213 @@
         });
       }
 
-      getSampleWidgets() {
-        return [
-          {
-            type: 'status healthy',
-            html: `
-              <h3>System Status</h3>
-              <div class="status-badge">Healthy</div>
-              <div class="status-message">All systems operational</div>
-            `
-          },
-          {
-            type: 'gauge',
-            html: `
-              <h3>Health Score</h3>
-              <div class="gauge-container">
-                <div class="gauge-value">94</div>
-                <div class="gauge-unit">%</div>
-              </div>
-            `
-          },
-          {
-            type: 'task-queue',
-            html: `
-              <h3>Task Queue</h3>
-              <div class="queue-stats">
-                <div class="stat">
-                  <div class="stat-value">12</div>
-                  <div class="stat-label">Pending</div>
+      getWidgetsForDashboard(dashboard) {
+        const dashboards = {
+          overview: [
+            {
+              type: 'status healthy',
+              html: `
+                <h3>System Status</h3>
+                <div class="status-badge">Healthy</div>
+                <div class="status-message">All systems operational</div>
+              `
+            },
+            {
+              type: 'gauge',
+              html: `
+                <h3>Health Score</h3>
+                <div class="gauge-container">
+                  <div class="gauge-value">94</div>
+                  <div class="gauge-unit">%</div>
                 </div>
-                <div class="stat">
-                  <div class="stat-value">3</div>
-                  <div class="stat-label">Running</div>
+              `
+            },
+            {
+              type: 'task-queue',
+              html: `
+                <h3>Task Queue</h3>
+                <div class="queue-stats">
+                  <div class="stat">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Pending</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Running</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">287</div>
+                    <div class="stat-label">Completed</div>
+                  </div>
                 </div>
-                <div class="stat">
-                  <div class="stat-value">287</div>
-                  <div class="stat-label">Completed</div>
+              `
+            },
+            {
+              type: 'agent-status',
+              html: `
+                <h3>Agent Status</h3>
+                <div class="agent-list">
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Analyzer Agent</div>
+                    <div class="agent-status">Healthy • 2h 34m</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Processor Agent</div>
+                    <div class="agent-status">Healthy • 1h 12m</div>
+                  </div>
                 </div>
-              </div>
-            `
-          },
-          {
-            type: 'agent-status',
-            html: `
-              <h3>Agent Status</h3>
-              <div class="agent-list">
-                <div class="agent-item healthy">
-                  <div class="agent-name">Analyzer Agent</div>
-                  <div class="agent-status">Healthy • 2h 34m</div>
+              `
+            },
+            {
+              type: 'activity',
+              html: `
+                <h3>Recent Activity</h3>
+                <div class="activity-list">
+                  <div class="activity-item">
+                    <div class="activity-time">2 min ago</div>
+                    <div class="activity-text">Workflow execution completed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">5 min ago</div>
+                    <div class="activity-text">New knowledge entry indexed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">12 min ago</div>
+                    <div class="activity-text">Agent registered: Curator</div>
+                  </div>
                 </div>
-                <div class="agent-item healthy">
-                  <div class="agent-name">Processor Agent</div>
-                  <div class="agent-status">Healthy • 1h 12m</div>
+              `
+            }
+          ],
+          agents: [
+            {
+              type: 'status healthy',
+              html: `
+                <h3>Agent Fleet Status</h3>
+                <div class="status-badge">Healthy</div>
+                <div class="status-message">All agents operational</div>
+              `
+            },
+            {
+              type: 'agent-status',
+              html: `
+                <h3>Active Agents</h3>
+                <div class="agent-list">
+                  <div class="agent-item healthy">
+                    <div class="agent-name">🎯 Coordinator Agent</div>
+                    <div class="agent-status">Healthy • Running</div>
+                    <div class="agent-uptime">Uptime: 5h 22m</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">📊 Analyzer Agent</div>
+                    <div class="agent-status">Healthy • Running</div>
+                    <div class="agent-uptime">Uptime: 4h 15m</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">⚡ Processor Agent</div>
+                    <div class="agent-status">Healthy • Idle</div>
+                    <div class="agent-uptime">Uptime: 3h 45m</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">🔍 Monitor Agent</div>
+                    <div class="agent-status">Healthy • Running</div>
+                    <div class="agent-uptime">Uptime: 2h 30m</div>
+                  </div>
                 </div>
-              </div>
-            `
-          },
-          {
-            type: 'activity',
-            html: `
-              <h3>Recent Activity</h3>
-              <div class="activity-list">
-                <div class="activity-item">
-                  <div class="activity-time">2 min ago</div>
-                  <div class="activity-text">Workflow execution completed</div>
+              `
+            },
+            {
+              type: 'gauge',
+              html: `
+                <h3>Agent Health Score</h3>
+                <div class="gauge-container">
+                  <div class="gauge-value">98</div>
+                  <div class="gauge-unit">%</div>
                 </div>
-                <div class="activity-item">
-                  <div class="activity-time">5 min ago</div>
-                  <div class="activity-text">New knowledge entry indexed</div>
+              `
+            }
+          ],
+          knowledge: [
+            {
+              type: 'status healthy',
+              html: `
+                <h3>Knowledge Base</h3>
+                <div class="status-badge">Ready</div>
+                <div class="status-message">Database connected</div>
+              `
+            },
+            {
+              type: 'gauge',
+              html: `
+                <h3>Total Knowledge Entries</h3>
+                <div class="gauge-container">
+                  <div class="gauge-value">2,847</div>
+                  <div class="gauge-unit">entries</div>
                 </div>
-                <div class="activity-item">
-                  <div class="activity-time">12 min ago</div>
-                  <div class="activity-text">Agent registered: Curator</div>
+              `
+            },
+            {
+              type: 'task-queue',
+              html: `
+                <h3>Index Statistics</h3>
+                <div class="queue-stats">
+                  <div class="stat">
+                    <div class="stat-value">2,847</div>
+                    <div class="stat-label">Indexed</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Pending</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">95%</div>
+                    <div class="stat-label">Coverage</div>
+                  </div>
                 </div>
-              </div>
-            `
-          }
-        ];
+              `
+            }
+          ],
+          activity: [
+            {
+              type: 'activity',
+              html: `
+                <h3>System Activity Log</h3>
+                <div class="activity-list">
+                  <div class="activity-item">
+                    <div class="activity-time">Just now</div>
+                    <div class="activity-text">✓ Workflow execution completed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">1 min ago</div>
+                    <div class="activity-text">✓ Agent heartbeat received</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">3 min ago</div>
+                    <div class="activity-text">✓ New knowledge entry indexed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">5 min ago</div>
+                    <div class="activity-text">✓ API request processed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">8 min ago</div>
+                    <div class="activity-text">✓ Cache cleared</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">12 min ago</div>
+                    <div class="activity-text">✓ Database backup completed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">15 min ago</div>
+                    <div class="activity-text">✓ Agent registered: Curator</div>
+                  </div>
+                </div>
+              `
+            }
+          ]
+        };
+
+        return dashboards[dashboard] || dashboards.overview;
       }
 
       refresh() {
