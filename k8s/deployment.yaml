@@ -38,11 +38,11 @@ spec:
         command: ['sh', '-c', 'mkdir -p /data/brain-wiki || true']
         resources:
           requests:
-            cpu: 10m
-            memory: 32Mi
+            cpu: 100m
+            memory: 128Mi
           limits:
-            cpu: 50m
-            memory: 64Mi
+            cpu: 200m
+            memory: 256Mi
         volumeMounts:
         - name: brain-wiki-storage
           mountPath: /data/brain-wiki
