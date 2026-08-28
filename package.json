@@ -1,0 +1,50 @@
+{
+  "name": "tsvai-harness",
+  "version": "1.0.0",
+  "description": "TSVAI Harness - AI Orchestration Platform",
+  "main": "server.js",
+  "private": true,
+  "workspaces": [
+    "ai/plugin",
+    "ai/army-agents",
+    "ai/brain-wiki",
+    "ai/consilient",
+    "ai/harvester",
+    "ai/curator",
+    "ai/vi-dashboard",
+    "ai/integration"
+  ],
+  "scripts": {
+    "install-all": "npm install && npm workspaces run install",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint ai/*/src ai/*/tests",
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js",
+    "build": "npm workspaces run build",
+    "clean": "rm -rf node_modules && npm workspaces run clean"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.50.0",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TSVAISolutions/tsvai-harness.git"
+  },
+  "keywords": [
+    "ai",
+    "orchestration",
+    "multi-agent",
+    "knowledge-base",
+    "pattern-mining"
+  ],
+  "author": "TSVAI Solutions",
+  "license": "MIT"
+}
