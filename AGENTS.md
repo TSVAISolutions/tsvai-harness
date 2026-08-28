@@ -14,3 +14,4 @@
 
 | Agent | Area | Task | Since | Last Update |
 |-------|------|------|-------|-------------|
+| claude-haiku-1 | ai/curator | Phase 8: Curator (COMPLETE) | 2026-08-28T09:00:00Z | 2026-08-28T10:00:00Z |
