@@ -14,5 +14,3 @@
 
 | Agent | Area | Task | Since | Last Update |
 |-------|------|------|-------|-------------|
-| claude-haiku-1 | ai/consilient | Phase 6: Consilient Engine (COMPLETE) | 2026-08-28T08:00:00Z | 2026-08-28T09:00:00Z |
-| claude-haiku-1 | ai/harvester | Phase 7: Harvester (COMPLETE) | 2026-08-28T08:00:00Z | 2026-08-28T09:00:00Z |
