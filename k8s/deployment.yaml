@@ -35,7 +35,7 @@ spec:
       initContainers:
       - name: init-brain-wiki
         image: busybox:latest
-        command: ['sh', '-c', 'mkdir -p /data/brain-wiki && chmod 777 /data/brain-wiki']
+        command: ['sh', '-c', 'mkdir -p /data/brain-wiki || true']
         volumeMounts:
         - name: brain-wiki-storage
           mountPath: /data/brain-wiki
@@ -43,7 +43,7 @@ spec:
       containers:
       - name: tsvai-harness
         image: tsvai-harness:latest
-        imagePullPolicy: Never  # For local development
+        imagePullPolicy: IfNotPresent  # For local development
         ports:
         - name: api
           containerPort: 3000

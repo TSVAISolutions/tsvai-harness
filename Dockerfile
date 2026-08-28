@@ -19,8 +19,8 @@ WORKDIR /app
 # Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
 
-# Create non-root user
-RUN addgroup -g 1000 tsvai && adduser -D -u 1000 -G tsvai tsvai
+# Create non-root user (use available UID if 1000 is taken)
+RUN addgroup -g 1001 tsvai && adduser -D -u 1001 -G tsvai tsvai || adduser -D tsvai
 
 # Copy node_modules from builder
 COPY --from=builder /app/node_modules ./node_modules
