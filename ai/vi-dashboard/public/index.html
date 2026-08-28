@@ -385,17 +385,40 @@
       }
 
       setupEventListeners() {
+        // Dashboard navigation
         document.querySelectorAll('[data-dashboard]').forEach(item => {
           item.addEventListener('click', (e) => {
-            document.querySelectorAll('[data-dashboard]').forEach(i => i.classList.remove('active'));
+            this.clearActiveItems();
             e.target.classList.add('active');
             this.loadDashboard(e.target.dataset.dashboard);
+          });
+        });
+
+        // Component navigation
+        document.querySelectorAll('[data-section]').forEach(item => {
+          item.addEventListener('click', (e) => {
+            this.clearActiveItems();
+            e.target.classList.add('active');
+            this.loadSection(e.target.dataset.section);
+          });
+        });
+
+        // Settings navigation
+        document.querySelectorAll('[data-action]').forEach(item => {
+          item.addEventListener('click', (e) => {
+            this.clearActiveItems();
+            e.target.classList.add('active');
+            this.loadAction(e.target.dataset.action);
           });
         });
 
         document.getElementById('refresh-btn').addEventListener('click', () => {
           this.refresh();
         });
+      }
+
+      clearActiveItems() {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
       }
 
       loadDashboard(name) {
@@ -409,6 +432,268 @@
         document.getElementById('page-title').textContent = titles[name] || name;
         this.currentDashboard = name;
         this.loadWidgets();
+      }
+
+      loadSection(section) {
+        const titles = {
+          'army-agents': '🎯 Army-Agents',
+          'brain-wiki': '🧠 Brain-Wiki',
+          'plugins': '⚙️ Plugins',
+          'metrics': '📈 Metrics'
+        };
+
+        document.getElementById('page-title').textContent = titles[section] || section;
+        this.loadSectionWidgets(section);
+      }
+
+      loadAction(action) {
+        const titles = {
+          'settings': '⚙️ Configuration',
+          'logs': '📋 Logs'
+        };
+
+        document.getElementById('page-title').textContent = titles[action] || action;
+        this.loadActionWidgets(action);
+      }
+
+      loadSectionWidgets(section) {
+        const grid = document.getElementById('dashboard-grid');
+        grid.innerHTML = '';
+
+        const sectionWidgets = {
+          'army-agents': [
+            {
+              type: 'agent-status',
+              html: `
+                <h3>Active Agents</h3>
+                <div class="agent-list">
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Coordinator Agent</div>
+                    <div class="agent-status">Healthy • Running</div>
+                    <div class="agent-uptime">Uptime: 3h 22m</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Analyzer Agent</div>
+                    <div class="agent-status">Healthy • Running</div>
+                    <div class="agent-uptime">Uptime: 2h 15m</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Processor Agent</div>
+                    <div class="agent-status">Healthy • Idle</div>
+                    <div class="agent-uptime">Uptime: 1h 45m</div>
+                  </div>
+                </div>
+              `
+            },
+            {
+              type: 'gauge',
+              html: `
+                <h3>Agent Health Score</h3>
+                <div class="gauge-container">
+                  <div class="gauge-value">96</div>
+                  <div class="gauge-unit">%</div>
+                </div>
+              `
+            }
+          ],
+          'brain-wiki': [
+            {
+              type: 'status healthy',
+              html: `
+                <h3>Knowledge Base Status</h3>
+                <div class="status-badge">Ready</div>
+                <div class="status-message">Database connected</div>
+              `
+            },
+            {
+              type: 'gauge',
+              html: `
+                <h3>Total Knowledge Entries</h3>
+                <div class="gauge-container">
+                  <div class="gauge-value">1,247</div>
+                  <div class="gauge-unit">entries</div>
+                </div>
+              `
+            },
+            {
+              type: 'task-queue',
+              html: `
+                <h3>Index Stats</h3>
+                <div class="queue-stats">
+                  <div class="stat">
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">Indexed</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">34</div>
+                    <div class="stat-label">Pending</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">98%</div>
+                    <div class="stat-label">Coverage</div>
+                  </div>
+                </div>
+              `
+            }
+          ],
+          'plugins': [
+            {
+              type: 'status healthy',
+              html: `
+                <h3>Installed Plugins</h3>
+                <div class="agent-list">
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Data Processor Plugin</div>
+                    <div class="agent-status">Active • v1.2.0</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Analytics Plugin</div>
+                    <div class="agent-status">Active • v1.0.5</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">API Gateway Plugin</div>
+                    <div class="agent-status">Active • v2.1.0</div>
+                  </div>
+                </div>
+              `
+            }
+          ],
+          'metrics': [
+            {
+              type: 'gauge',
+              html: `
+                <h3>CPU Usage</h3>
+                <div class="gauge-container">
+                  <div class="gauge-value">34</div>
+                  <div class="gauge-unit">%</div>
+                </div>
+              `
+            },
+            {
+              type: 'gauge',
+              html: `
+                <h3>Memory Usage</h3>
+                <div class="gauge-container">
+                  <div class="gauge-value">52</div>
+                  <div class="gauge-unit">%</div>
+                </div>
+              `
+            },
+            {
+              type: 'task-queue',
+              html: `
+                <h3>Requests/sec</h3>
+                <div class="queue-stats">
+                  <div class="stat">
+                    <div class="stat-value">2,341</div>
+                    <div class="stat-label">API Calls</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">98.2%</div>
+                    <div class="stat-label">Success Rate</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value">45ms</div>
+                    <div class="stat-label">Avg Latency</div>
+                  </div>
+                </div>
+              `
+            }
+          ]
+        };
+
+        const widgets = sectionWidgets[section] || [];
+        widgets.forEach(widget => {
+          const el = document.createElement('div');
+          el.className = `widget ${widget.type}`;
+          el.innerHTML = widget.html;
+          grid.appendChild(el);
+        });
+      }
+
+      loadActionWidgets(action) {
+        const grid = document.getElementById('dashboard-grid');
+        grid.innerHTML = '';
+
+        const actionWidgets = {
+          'settings': [
+            {
+              type: 'status healthy',
+              html: `
+                <h3>Configuration</h3>
+                <div style="padding: 10px; background: #f9f9f9; border-radius: 4px; font-family: monospace; font-size: 12px;">
+                  <div><strong>Environment:</strong> production</div>
+                  <div><strong>API Version:</strong> v1.0.0</div>
+                  <div><strong>Node Version:</strong> v18.14.0</div>
+                  <div><strong>Database:</strong> Connected</div>
+                  <div><strong>Cache:</strong> Redis (127.0.0.1:6379)</div>
+                </div>
+              `
+            },
+            {
+              type: 'status healthy',
+              html: `
+                <h3>Feature Flags</h3>
+                <div class="agent-list">
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Advanced Analytics</div>
+                    <div class="agent-status">Enabled</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Real-time Monitoring</div>
+                    <div class="agent-status">Enabled</div>
+                  </div>
+                  <div class="agent-item healthy">
+                    <div class="agent-name">Auto-scaling</div>
+                    <div class="agent-status">Enabled</div>
+                  </div>
+                </div>
+              `
+            }
+          ],
+          'logs': [
+            {
+              type: 'activity',
+              html: `
+                <h3>System Logs</h3>
+                <div class="activity-list">
+                  <div class="activity-item">
+                    <div class="activity-time">Just now</div>
+                    <div class="activity-text">✓ Workflow execution completed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">2 min ago</div>
+                    <div class="activity-text">✓ Agent heartbeat received</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">5 min ago</div>
+                    <div class="activity-text">✓ Knowledge entry indexed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">8 min ago</div>
+                    <div class="activity-text">✓ API request processed</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">12 min ago</div>
+                    <div class="activity-text">✓ Cache cleared</div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-time">15 min ago</div>
+                    <div class="activity-text">✓ Database backup completed</div>
+                  </div>
+                </div>
+              `
+            }
+          ]
+        };
+
+        const widgets = actionWidgets[action] || [];
+        widgets.forEach(widget => {
+          const el = document.createElement('div');
+          el.className = `widget ${widget.type}`;
+          el.innerHTML = widget.html;
+          grid.appendChild(el);
+        });
       }
 
       loadWidgets() {
