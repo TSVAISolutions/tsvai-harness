@@ -14,4 +14,3 @@
 
 | Agent | Area | Task | Since | Last Update |
 |-------|------|------|-------|-------------|
-| claude-haiku-4.5 | ai/integration | Phase 10: Integration & E2E Testing | 2026-08-24T00:00:00Z | 2026-08-28T18:30:00Z |
