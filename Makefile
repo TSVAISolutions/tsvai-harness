@@ -121,6 +121,23 @@ build:
 	@kind load docker-image tsvai-harness:latest --name dev-cluster
 	@echo "✅ Image loaded into cluster"
 
+rebuild: build restart
+	@echo "✅ Image rebuilt and deployed"
+
+rebuild-no-cache:
+	@echo "🔨 Building Docker image (no cache)..."
+	@docker build --no-cache -t tsvai-harness:latest .
+	@echo "✅ Image built (fresh layers)"
+	@echo ""
+	@echo "Loading into kind cluster..."
+	@kind load docker-image tsvai-harness:latest --name dev-cluster
+	@echo "✅ Image loaded into cluster"
+	@echo ""
+	@echo "Restarting deployment..."
+	@kubectl rollout restart deployment/tsvai-harness -n tsvai
+	@kubectl rollout status deployment/tsvai-harness -n tsvai --timeout=60s
+	@echo "✅ Deployment restarted with new image"
+
 # Database/storage targets
 db-backup:
 	@echo "💾 Backing up database..."
