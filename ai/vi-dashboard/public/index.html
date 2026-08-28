@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSVAI Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f5f7fa;
+      color: #2c3e50;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      height: 100vh;
+    }
+
+    .sidebar {
+      background: #2c3e50;
+      color: white;
+      padding: 20px;
+      overflow-y: auto;
+      border-right: 1px solid #34495e;
+    }
+
+    .sidebar h1 {
+      font-size: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-section {
+      margin-bottom: 30px;
+    }
+
+    .nav-section h2 {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #95a5a6;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .nav-item {
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .nav-item:hover {
+      background: #34495e;
+    }
+
+    .nav-item.active {
+      background: #3498db;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: white;
+      padding: 20px;
+      border-bottom: 1px solid #ecf0f1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+    }
+
+    .btn-secondary {
+      background: #ecf0f1;
+      color: #2c3e50;
+    }
+
+    .btn-secondary:hover {
+      background: #d5dbdc;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .widget {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s;
+    }
+
+    .widget:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .widget h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #34495e;
+    }
+
+    .widget.status.healthy {
+      border-left: 4px solid #27ae60;
+    }
+
+    .widget.status.degraded {
+      border-left: 4px solid #f39c12;
+    }
+
+    .widget.status.unhealthy {
+      border-left: 4px solid #e74c3c;
+    }
+
+    .status-badge {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .status.healthy .status-badge {
+      background: #d5f4e6;
+      color: #27ae60;
+    }
+
+    .status.degraded .status-badge {
+      background: #fdebd0;
+      color: #f39c12;
+    }
+
+    .status.unhealthy .status-badge {
+      background: #fadbd8;
+      color: #e74c3c;
+    }
+
+    .gauge-container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .gauge-value {
+      font-size: 36px;
+      font-weight: bold;
+      color: #3498db;
+    }
+
+    .gauge-unit {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-top: 5px;
+    }
+
+    .queue-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #3498db;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #7f8c8d;
+      margin-top: 5px;
+    }
+
+    .agent-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .agent-item {
+      padding: 10px;
+      border-left: 3px solid #95a5a6;
+      border-radius: 2px;
+    }
+
+    .agent-item.healthy {
+      border-left-color: #27ae60;
+      background: #f0fdf4;
+    }
+
+    .agent-item.unhealthy {
+      border-left-color: #e74c3c;
+      background: #fef2f2;
+    }
+
+    .agent-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .agent-status {
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+
+    .agent-uptime {
+      font-size: 11px;
+      color: #95a5a6;
+      margin-top: 3px;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      padding: 10px;
+      border-left: 2px solid #3498db;
+      border-radius: 2px;
+      background: #ecf7ff;
+    }
+
+    .activity-time {
+      font-size: 11px;
+      color: #7f8c8d;
+      margin-bottom: 3px;
+    }
+
+    .activity-text {
+      font-size: 13px;
+      color: #2c3e50;
+    }
+
+    .chart-container {
+      background: #f9f9f9;
+      border-radius: 4px;
+      padding: 10px;
+    }
+
+    .footer {
+      background: #ecf0f1;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #7f8c8d;
+      border-top: 1px solid #bdc3c7;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3498db;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h1>📊 TSVAI Dashboard</h1>
+
+      <div class="nav-section">
+        <h2>Dashboards</h2>
+        <div class="nav-item active" data-dashboard="overview">System Overview</div>
+        <div class="nav-item" data-dashboard="agents">Agents</div>
+        <div class="nav-item" data-dashboard="knowledge">Knowledge</div>
+        <div class="nav-item" data-dashboard="activity">Activity</div>
+      </div>
+
+      <div class="nav-section">
+        <h2>Components</h2>
+        <div class="nav-item" data-section="army-agents">🎯 Army-Agents</div>
+        <div class="nav-item" data-section="brain-wiki">🧠 Brain-Wiki</div>
+        <div class="nav-item" data-section="plugins">⚙️ Plugins</div>
+        <div class="nav-item" data-section="metrics">📈 Metrics</div>
+      </div>
+
+      <div class="nav-section">
+        <h2>Settings</h2>
+        <div class="nav-item" data-action="settings">⚙️ Configuration</div>
+        <div class="nav-item" data-action="logs">📋 Logs</div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="header">
+        <h1 id="page-title">System Overview</h1>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="refresh-btn">⟳ Refresh</button>
+          <button class="btn btn-primary" id="add-widget-btn">+ Add Widget</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="dashboard-grid" id="dashboard-grid">
+          <!-- Widgets will be loaded here -->
+        </div>
+      </div>
+
+      <div class="footer">
+        <span id="status-indicator" class="loading"></span>
+        <span id="footer-text"> TSVAI Dashboard • Connected</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dashboard initialization and management
+    class Dashboard {
+      constructor() {
+        this.currentDashboard = 'overview';
+        this.widgets = [];
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.loadDashboard('overview');
+      }
+
+      setupEventListeners() {
+        document.querySelectorAll('[data-dashboard]').forEach(item => {
+          item.addEventListener('click', (e) => {
+            document.querySelectorAll('[data-dashboard]').forEach(i => i.classList.remove('active'));
+            e.target.classList.add('active');
+            this.loadDashboard(e.target.dataset.dashboard);
+          });
+        });
+
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+          this.refresh();
+        });
+      }
+
+      loadDashboard(name) {
+        const titles = {
+          overview: 'System Overview',
+          agents: 'Agents',
+          knowledge: 'Knowledge',
+          activity: 'Activity'
+        };
+
+        document.getElementById('page-title').textContent = titles[name] || name;
+        this.currentDashboard = name;
+        this.loadWidgets();
+      }
+
+      loadWidgets() {
+        const grid = document.getElementById('dashboard-grid');
+        grid.innerHTML = '';
+
+        // Create sample widgets
+        const widgets = this.getSampleWidgets();
+
+        widgets.forEach(widget => {
+          const el = document.createElement('div');
+          el.className = `widget ${widget.type}`;
+          el.innerHTML = widget.html;
+          grid.appendChild(el);
+        });
+      }
+
+      getSampleWidgets() {
+        return [
+          {
+            type: 'status healthy',
+            html: `
+              <h3>System Status</h3>
+              <div class="status-badge">Healthy</div>
+              <div class="status-message">All systems operational</div>
+            `
+          },
+          {
+            type: 'gauge',
+            html: `
+              <h3>Health Score</h3>
+              <div class="gauge-container">
+                <div class="gauge-value">94</div>
+                <div class="gauge-unit">%</div>
+              </div>
+            `
+          },
+          {
+            type: 'task-queue',
+            html: `
+              <h3>Task Queue</h3>
+              <div class="queue-stats">
+                <div class="stat">
+                  <div class="stat-value">12</div>
+                  <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-value">3</div>
+                  <div class="stat-label">Running</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-value">287</div>
+                  <div class="stat-label">Completed</div>
+                </div>
+              </div>
+            `
+          },
+          {
+            type: 'agent-status',
+            html: `
+              <h3>Agent Status</h3>
+              <div class="agent-list">
+                <div class="agent-item healthy">
+                  <div class="agent-name">Analyzer Agent</div>
+                  <div class="agent-status">Healthy • 2h 34m</div>
+                </div>
+                <div class="agent-item healthy">
+                  <div class="agent-name">Processor Agent</div>
+                  <div class="agent-status">Healthy • 1h 12m</div>
+                </div>
+              </div>
+            `
+          },
+          {
+            type: 'activity',
+            html: `
+              <h3>Recent Activity</h3>
+              <div class="activity-list">
+                <div class="activity-item">
+                  <div class="activity-time">2 min ago</div>
+                  <div class="activity-text">Workflow execution completed</div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-time">5 min ago</div>
+                  <div class="activity-text">New knowledge entry indexed</div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-time">12 min ago</div>
+                  <div class="activity-text">Agent registered: Curator</div>
+                </div>
+              </div>
+            `
+          }
+        ];
+      }
+
+      refresh() {
+        this.loadWidgets();
+        document.getElementById('status-indicator').style.animation = 'pulse 0.5s';
+        setTimeout(() => {
+          document.getElementById('status-indicator').style.animation = 'pulse 1.5s';
+        }, 500);
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      new Dashboard();
+    });
+  </script>
+</body>
+</html>
