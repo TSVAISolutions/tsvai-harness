@@ -14,4 +14,3 @@
 
 | Agent | Area | Task | Since | Last Update |
 |-------|------|------|-------|-------------|
-| claude-haiku-1 | ai/vi-dashboard | Phase 9: Dashboard (COMPLETE) | 2026-08-28T10:00:00Z | 2026-08-28T11:00:00Z |
