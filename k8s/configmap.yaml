@@ -1,0 +1,153 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tsvai-config
+  namespace: tsvai
+data:
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  HARNESS_PORT: "3000"
+  DASHBOARD_PORT: "3001"
+
+  # Brain-Wiki Configuration
+  BRAIN_WIKI_DB_PATH: "/data/brain-wiki"
+  BRAIN_WIKI_MAX_ENTRIES: "100000"
+
+  # Harvester Configuration
+  HARVESTER_BATCH_SIZE: "100"
+  HARVESTER_POOL_SIZE: "20"
+
+  # Curator Configuration
+  CURATOR_QUALITY_THRESHOLD: "0.7"
+  CURATOR_BATCH_SIZE: "50"
+
+  # Consilient Configuration
+  CONSILIENT_CONFIDENCE_MIN: "0.75"
+  CONSILIENT_MIN_FREQUENCY: "2"
+
+  # VI-Dashboard Configuration
+  DASHBOARD_REFRESH_RATE: "5000"
+  DASHBOARD_MAX_CONNECTIONS: "100"
+
+  # Workflow Configuration
+  WORKFLOW_TIMEOUT: "30000"
+  MAX_EVENT_LOG_SIZE: "1000"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tsvai-server-config
+  namespace: tsvai
+data:
+  server.js: |
+    const express = require('express');
+    const path = require('path');
+    const HarnessOrchestrator = require('./ai/integration/src/harness-orchestrator');
+    const workflows = require('./ai/integration/src/e2e-workflows');
+    const ArmyAgents = require('./ai/army-agents/src/army-agents');
+    const BrainWiki = require('./ai/brain-wiki/src/brain-wiki');
+    const Consilient = require('./ai/consilient/src/consilient');
+    const Harvester = require('./ai/harvester/src/harvester');
+    const Curator = require('./ai/curator/src/curator');
+    const VIDashboard = require('./ai/vi-dashboard/src/vi-dashboard');
+
+    const app = express();
+    app.use(express.json());
+
+    let orchestrator;
+
+    // Initialize on startup
+    async function start() {
+      console.log('Initializing TSVAI Harness...');
+
+      orchestrator = new HarnessOrchestrator();
+
+      await orchestrator.initialize({
+        'army-agents': ArmyAgents,
+        'brain-wiki': BrainWiki,
+        'consilient': Consilient,
+        'harvester': Harvester,
+        'curator': Curator,
+        'vi-dashboard': VIDashboard
+      });
+
+      // Register workflows
+      orchestrator.registerWorkflow('data-ingestion', workflows.dataIngestionWorkflow);
+      orchestrator.registerWorkflow('agent-learning', workflows.agentLearningWorkflow);
+      orchestrator.registerWorkflow('content-processing', workflows.contentProcessingWorkflow);
+      orchestrator.registerWorkflow('decision-making', workflows.decisionMakingWorkflow);
+      orchestrator.registerWorkflow('integration-test', workflows.fullSystemIntegrationTest);
+      orchestrator.registerWorkflow('monitoring', workflows.monitoringWorkflow);
+
+      console.log('✓ Harness initialized');
+    }
+
+    // API Routes
+
+    // Health check
+    app.get('/api/health', (req, res) => {
+      const health = orchestrator.getSystemHealth();
+      res.json(health);
+    });
+
+    // Readiness check
+    app.get('/api/ready', (req, res) => {
+      if (!orchestrator) {
+        return res.status(503).json({ ready: false });
+      }
+      res.json({ ready: true });
+    });
+
+    // System status
+    app.get('/api/status', (req, res) => {
+      const status = orchestrator.getSystemStatus();
+      res.json(status);
+    });
+
+    // Diagnostics
+    app.get('/api/diagnostics', async (req, res) => {
+      try {
+        const diagnostics = await orchestrator.runDiagnostics();
+        res.json(diagnostics);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    // List workflows
+    app.get('/api/workflows', (req, res) => {
+      const workflows = orchestrator.listWorkflows();
+      res.json({ workflows });
+    });
+
+    // Execute workflow
+    app.post('/api/workflows/execute', async (req, res) => {
+      try {
+        const { workflow, inputs } = req.body;
+        const result = await orchestrator.executeWorkflow(workflow, inputs);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    // Event log
+    app.get('/api/events', (req, res) => {
+      const limit = req.query.limit ? parseInt(req.query.limit) : 100;
+      const events = orchestrator.getEventLog(limit);
+      res.json({ events });
+    });
+
+    // Serve dashboard
+    app.use(express.static(path.join(__dirname, 'ai/vi-dashboard/public')));
+
+    // Start server
+    start().then(() => {
+      const port = process.env.HARNESS_PORT || 3000;
+      app.listen(port, '0.0.0.0', () => {
+        console.log(`Harness API listening on port ${port}`);
+      });
+    }).catch(error => {
+      console.error('Failed to initialize harness:', error);
+      process.exit(1);
+    });

@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tsvai-harness
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/TSVAISolutions/tsvai-harness
+    targetRevision: main
+    path: k8s
+
+    # Helm-based if using Helm chart
+    # helm:
+    #   releaseName: tsvai-harness
+    #   values: |
+    #     replicaCount: 2
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tsvai
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+
+    syncOptions:
+    - CreateNamespace=true
+    - RespectIgnoreDifferences=true
+
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  revisionHistoryLimit: 10
+
+  # Health assessment rules
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: tsvai-harness-environments
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - name: dev
+        namespace: tsvai-dev
+        replicas: 1
+      - name: staging
+        namespace: tsvai-staging
+        replicas: 2
+      - name: production
+        namespace: tsvai-prod
+        replicas: 3
+
+  template:
+    metadata:
+      name: tsvai-harness-{{ name }}
+      namespace: argocd
+    spec:
+      project: default
+
+      source:
+        repoURL: https://github.com/TSVAISolutions/tsvai-harness
+        targetRevision: main
+        path: k8s
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ namespace }}'
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m

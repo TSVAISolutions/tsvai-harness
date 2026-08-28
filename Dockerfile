@@ -1,55 +1,49 @@
-# TSVAI Plugin Dockerfile
-# Multi-stage build for ai/plugin
+# Multi-stage build for TSVAI Harness
 
-FROM node:22-alpine AS build
+# Stage 1: Builder
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
 # Copy package files
-COPY ai/plugin/package.json ./
-COPY ai/plugin/package-lock.json ./
+COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --no-audit --no-fund
+RUN npm ci --only=production
 
-# Copy source code
-COPY ai/plugin/src ./src
-COPY ai/plugin/skills ./skills
-COPY ai/plugin/.claude-plugin ./.claude-plugin
-COPY ai/plugin/.mcp.json ./
-COPY ai/plugin/CLAUDE.md ./
-COPY ai/plugin/CONNECTORS.md ./
-
-# Build if needed
-RUN npm run build 2>/dev/null || true
-
-# Runtime stage
-FROM node:22-alpine
+# Stage 2: Runtime
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy built artifacts from build stage
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/src ./src
-COPY --from=build /app/skills ./skills
-COPY --from=build /app/.claude-plugin ./.claude-plugin
-COPY --from=build /app/.mcp.json ./
-COPY --from=build /app/CLAUDE.md ./
-COPY --from=build /app/CONNECTORS.md ./
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
 
-# Copy runtime scripts
-COPY ai/plugin/bin ./bin
+# Create non-root user
+RUN addgroup -g 1000 tsvai && adduser -D -u 1000 -G tsvai tsvai
 
-# Make CLI executable
-RUN chmod +x bin/tsvai
+# Copy node_modules from builder
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copy application code
+COPY --chown=tsvai:tsvai . .
+
+# Create required directories
+RUN mkdir -p /data/brain-wiki /var/log/tsvai && \
+    chown -R tsvai:tsvai /data /var/log/tsvai
+
+# Switch to non-root user
+USER tsvai
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "console.log('ok')" || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
-EXPOSE 3000
+# Expose ports
+EXPOSE 3000 3001
 
-ENV NODE_ENV=production
+# Use dumb-init to run Node (handles signals properly)
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
-# Default command
-CMD ["node", "src/index.js"]
+# Start application
+CMD ["node", "server.js"]
