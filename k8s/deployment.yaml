@@ -7,7 +7,7 @@ metadata:
     app: tsvai-harness
     version: v1
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -36,6 +36,13 @@ spec:
       - name: init-brain-wiki
         image: busybox:latest
         command: ['sh', '-c', 'mkdir -p /data/brain-wiki || true']
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 50m
+            memory: 64Mi
         volumeMounts:
         - name: brain-wiki-storage
           mountPath: /data/brain-wiki
