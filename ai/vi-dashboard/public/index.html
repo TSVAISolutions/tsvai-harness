@@ -748,6 +748,138 @@
             </div>
           </div>
         </div>
+
+        <!-- Brain Knowledge Base Page -->
+        <div id="page-brain" class="page hidden" style="display: grid; grid-template-columns: 300px 1fr 320px; gap: 24px; padding: 32px;">
+          <!-- Left Sidebar - Navigation -->
+          <div>
+            <div class="card" style="height: 100%; overflow-y: auto;">
+              <div style="margin-bottom: 16px;">
+                <input type="text" placeholder="Search pages..."
+                  style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px; color: #e2e8f0; font-size: 12px;">
+              </div>
+
+              <div style="margin-bottom: 20px;">
+                <div style="font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 8px; font-weight: 600;">Architecture</div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="padding: 8px; background: #0f172a; border-radius: 4px; cursor: pointer; color: #f1f5f9; border-left: 3px solid #3b82f6;">📦 harness</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">📋 platform-overview</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">📋 platform-repos</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🎯 integration</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 20px;">
+                <div style="font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 8px; font-weight: 600;">Ontology</div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🔷 Primitives</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🔀 Relationships</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">⚙️ Actions</div>
+                </div>
+              </div>
+
+              <div>
+                <div style="font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 8px; font-weight: 600;">Components</div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🧠 Brain-Wiki</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🎯 Army-Agents</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🤝 Consilient</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🌾 Harvester</div>
+                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🎨 Curator</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Content -->
+          <div>
+            <div class="card">
+              <div style="margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                  <span style="font-size: 16px;">📦</span>
+                  <div>
+                    <div style="font-size: 14px; font-weight: 600; color: #f1f5f9;">Brain (VI)</div>
+                    <div style="font-size: 11px; color: #94a3b8;">Wiki Q&A • 47 pages</div>
+                  </div>
+                </div>
+              </div>
+
+              <h2 style="font-size: 32px; font-weight: 700; color: #f1f5f9; margin-bottom: 20px;">TSVAI Harness</h2>
+
+              <div style="color: #cbd5e1; line-height: 1.8; margin-bottom: 28px;">
+                <p style="margin-bottom: 12px;">
+                  The operating system of TSVAI Intelligence. A monorepo that aggregates all TSVAI repositories as submodules and hosts the AI packages that wrap the platform.
+                </p>
+              </div>
+
+              <h3 style="font-size: 18px; font-weight: 600; color: #f1f5f9; margin-bottom: 12px;">What is TSVAI Harness</h3>
+              <div style="color: #cbd5e1; line-height: 1.8; margin-bottom: 24px;">
+                <p style="margin-bottom: 12px;">
+                  Harness is the central orchestration system for the entire TSVAI ecosystem. It provides:
+                </p>
+                <ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                  <li><strong>Unified monorepo access</strong> - Git submodules across all TSVAI repositories</li>
+                  <li><strong>AI layer integration</strong> - Brain-Wiki, Army-Agents, Consilient, and more</li>
+                  <li><strong>Knowledge management</strong> - Centralized context docs and deployment guides</li>
+                  <li><strong>Agent coordination</strong> - Multi-agent registration and conflict prevention</li>
+                  <li><strong>CI/CD automation</strong> - Plugin builds and Kubernetes deployments</li>
+                </ul>
+              </div>
+
+              <h3 style="font-size: 18px; font-weight: 600; color: #f1f5f9; margin-bottom: 12px;">Structure</h3>
+              <div style="background: #0f172a; padding: 16px; border-radius: 6px; font-family: monospace; font-size: 12px; color: #cbd5e1; line-height: 1.6; overflow-x: auto;">
+tsvai-harness/
+├── ai/                    # AI LAYER
+│   ├── brain-wiki/       # Knowledge base
+│   ├── cli/              # CLI interface
+│   ├── plugin/           # Core plugin system
+│   └── [more components]/
+├── submodules/           # All TSVAI repos
+│   ├── frontend/
+│   ├── backend/
+│   └── platform/
+├── context/              # Documentation
+└── k8s/                  # Kubernetes manifests
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Sidebar - AI Assistant -->
+          <div>
+            <div class="card" style="height: 100%; display: flex; flex-direction: column;">
+              <div style="margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                  <span style="font-size: 16px;">🧠</span>
+                  <div style="font-weight: 600; color: #f1f5f9;">Brain (VI)</div>
+                </div>
+                <div style="font-size: 11px; color: #94a3b8;">Knowledge Assistant</div>
+              </div>
+
+              <div style="flex: 1; overflow-y: auto; margin-bottom: 12px;">
+                <div style="background: #0f172a; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                  <div style="font-size: 12px; color: #cbd5e1;">
+                    <strong>Ask Brain (VI) anything</strong> from the pages it knows about.
+                  </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <div style="background: #0f172a; padding: 8px; border-radius: 4px; cursor: pointer; border-left: 2px solid #3b82f6;">
+                    <div style="font-size: 12px; color: #cbd5e1;">What is the harness structure?</div>
+                  </div>
+                  <div style="background: #0f172a; padding: 8px; border-radius: 4px; cursor: pointer; border-left: 2px solid #3b82f6;">
+                    <div style="font-size: 12px; color: #cbd5e1;">How to deploy to Kubernetes?</div>
+                  </div>
+                  <div style="background: #0f172a; padding: 8px; border-radius: 4px; cursor: pointer; border-left: 2px solid #3b82f6;">
+                    <div style="font-size: 12px; color: #cbd5e1;">What are the AI components?</div>
+                  </div>
+                </div>
+              </div>
+
+              <input type="text" placeholder="Ask Brain (VI)..."
+                style="width: 100%; background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 8px; color: #e2e8f0; font-size: 12px;">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
