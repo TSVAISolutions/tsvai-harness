@@ -1221,6 +1221,7 @@
                 </div>
               </div>
 
+              <div id="brain-content">
               <h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Harness Factory</h2>
 
               <div style="color: var(--text-primary); line-height: 1.8; margin-bottom: 28px;">
@@ -1257,6 +1258,7 @@ harness-factory/
 │   └── platform/
 ├── context/              # Documentation
 └── k8s/                  # Kubernetes manifests
+              </div>
               </div>
             </div>
           </div>
@@ -1438,26 +1440,16 @@ harness-factory/
       }
 
       loadBrainPage(pageName) {
-        const titles = {
-          'harness': 'Harness Factory',
-          'platform-overview': 'Platform Overview',
-          'platform-repos': 'Platform Repositories',
-          'integration': 'Integration Guide'
-        };
-
         const contents = {
-          'harness': '<h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Harness Factory</h2><p style="color: var(--text-primary); line-height: 1.8;">The central orchestration system for the entire Harness Factory ecosystem. Provides unified monorepo access, AI layer integration, and multi-agent coordination.</p>',
-          'platform-overview': '<h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Platform Overview</h2><p style="color: var(--text-primary); line-height: 1.8;">Complete architecture overview including frontend, backend, and platform infrastructure components. Understand the full stack from web UI to cloud deployment.</p>',
-          'platform-repos': '<h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Platform Repositories</h2><p style="color: var(--text-primary); line-height: 1.8;">All available repositories organized by category. Clone, fork, or contribute to any of our open source projects. Complete documentation for each repo.</p>',
-          'integration': '<h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Integration Guide</h2><p style="color: var(--text-primary); line-height: 1.8;">Learn how to integrate Harness Factory with your existing systems. APIs, webhooks, and plugin development guides available.</p>'
+          'harness': '<h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Harness Factory</h2><div style="color: var(--text-primary); line-height: 1.8; margin-bottom: 28px;"><p style="margin-bottom: 12px;">The operating system of Harness Factory Intelligence. A monorepo that aggregates all Harness Factory repositories as submodules and hosts the AI packages that wrap the platform.</p></div><h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">What is Harness Factory</h3><div style="color: var(--text-primary); line-height: 1.8; margin-bottom: 24px;"><p style="margin-bottom: 12px;">Harness is the central orchestration system for the entire Harness Factory ecosystem. It provides:</p><ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;"><li><strong>Unified monorepo access</strong> - Git submodules</li><li><strong>AI layer integration</strong> - Brain-Wiki, Army-Agents, Consilient</li><li><strong>Knowledge management</strong> - Context docs and guides</li><li><strong>Agent coordination</strong> - Multi-agent registration</li><li><strong>CI/CD automation</strong> - Plugin builds and deployments</li></ul></div>',
+          'platform-overview': '<h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Platform Overview</h2><div style="color: var(--text-primary); line-height: 1.8;"><p style="margin-bottom: 16px;">Complete architecture overview including frontend, backend, and platform infrastructure components. Understand the full stack from web UI to cloud deployment.</p><h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Key Components</h3><ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;"><li><strong>Frontend</strong> - Web applications and dashboards</li><li><strong>Backend</strong> - API services and business logic</li><li><strong>Platform</strong> - Infrastructure and deployment tools</li></ul></div>',
+          'platform-repos': '<h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Platform Repositories</h2><div style="color: var(--text-primary); line-height: 1.8;"><p style="margin-bottom: 16px;">All available repositories organized by category. Clone, fork, or contribute to any of our open source projects.</p><h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Repository Categories</h3><ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;"><li><strong>Frontend Repos</strong> - Web UIs and dashboards</li><li><strong>Backend Repos</strong> - Services and APIs (30+)</li><li><strong>Platform Repos</strong> - Infrastructure and tools (23+)</li></ul></div>',
+          'integration': '<h2 style="font-size: 32px; font-weight: 700; color: var(--text-primary); margin-bottom: 20px;">Integration Guide</h2><div style="color: var(--text-primary); line-height: 1.8;"><p style="margin-bottom: 16px;">Learn how to integrate Harness Factory with your existing systems. APIs, webhooks, and plugin development guides available.</p><h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Integration Methods</h3><ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;"><li><strong>REST APIs</strong> - Standard HTTP endpoints</li><li><strong>Webhooks</strong> - Event-driven integrations</li><li><strong>Plugins</strong> - Custom extensions and tools</li><li><strong>CLI</strong> - Command-line interface</li></ul></div>'
         };
 
-        const contentDiv = document.querySelector('.card') || document.querySelector('[id*="content"]');
-        if (contentDiv) {
-          const mainContent = contentDiv.querySelector('[style*="margin-bottom: 16px"]')?.parentElement || contentDiv;
-          if (mainContent && mainContent !== contentDiv) {
-            mainContent.innerHTML = contents[pageName] || contents['harness'];
-          }
+        const brainContent = document.getElementById('brain-content');
+        if (brainContent) {
+          brainContent.innerHTML = contents[pageName] || contents['harness'];
         }
       }
 
