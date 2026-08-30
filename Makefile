@@ -100,47 +100,30 @@ dashboard:
 		sleep 1; \
 	done
 	@echo "✅ Pod is ready!"
-	@echo "🔌 Starting port-forward on port 8080..." && \
-	kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
-	PF_PID=$$!; \
-	sleep 2; \
-	echo "⏳ Waiting for port to be ready..." && \
-	PORT_READY=false; \
-	for attempt in {1..15}; do \
-		if timeout 1 bash -c "echo > /dev/tcp/localhost/8080" 2>/dev/null; then \
-			echo "✅ Port-forward connected!"; \
-			PORT_READY=true; \
-			break; \
-		fi; \
-		sleep 0.5; \
-	done; \
-	if [ "$$PORT_READY" = "false" ]; then \
-		echo "❌ Port-forward failed to connect"; \
-		kill $$PF_PID 2>/dev/null || true; \
-		exit 1; \
-	fi; \
-	echo "✅ Checking service health..." && \
-	SUCCESS=false; \
-	for i in {1..15}; do \
+	@echo "🔌 Starting port-forward on port 8080..."
+	@kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
+	echo "⏳ Waiting for service to be ready..." && \
+	sleep 3 && \
+	success=false; \
+	for i in {1..20}; do \
 		if curl -s -f http://localhost:8080/api/health > /dev/null 2>&1; then \
 			echo "✅ Service is ready!"; \
 			sleep 1; \
 			open http://localhost:8080; \
 			echo "✅ Dashboard opened at http://localhost:8080"; \
-			SUCCESS=true; \
+			success=true; \
 			break; \
 		fi; \
 		if [ $$i -le 3 ]; then \
-			echo "  Checking ($$i/15)..."; \
-		elif [ $$(( $$i % 3 )) -eq 0 ]; then \
-			echo "  Still checking ($$i/15)..."; \
+			echo "  Checking ($$i/20)..."; \
+		elif [ $$(( $$i % 5 )) -eq 0 ]; then \
+			echo "  Still waiting ($$i/20)..."; \
 		fi; \
 		sleep 1; \
 	done; \
-	if [ "$$SUCCESS" = "false" ]; then \
-		echo "⚠️  Service didn't respond after 15 seconds"; \
-		echo "💡 Check logs: kubectl logs -n harness-factory -l app=harness-factory"; \
-		kill $$PF_PID 2>/dev/null || true; \
+	if [ "$$success" = "false" ]; then \
+		echo "⚠️  Service didn't respond after 20 seconds"; \
+		echo "💡 Try: kubectl logs -n harness-factory -l app=harness-factory"; \
 	fi
 
 # Development targets
