@@ -89,18 +89,22 @@
         justify-content: center;
         padding: 8px 4px;
         margin-bottom: 4px;
-        flex-direction: column;
-        min-width: 52px;
-        white-space: nowrap;
+        width: 52px;
+        height: 44px;
         overflow: hidden;
+        font-size: 0 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
       }
 
       .nav-item span:first-child {
-        font-size: 18px;
+        font-size: 18px !important;
       }
 
-      .nav-item span:not(.nav-badge):not(:first-child) {
-        display: none !important;
+      .nav-item span:not(:first-child) {
+        font-size: 0 !important;
       }
 
       .nav-badge {
@@ -154,18 +158,22 @@
       justify-content: center;
       padding: 8px 4px;
       margin-bottom: 4px;
-      flex-direction: column;
-      min-width: 52px;
-      white-space: nowrap;
+      width: 52px;
+      height: 44px;
       overflow: hidden;
+      font-size: 0 !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
     }
 
     .container.sidebar-collapsed .nav-item span:first-child {
-      font-size: 18px;
+      font-size: 18px !important;
     }
 
-    .container.sidebar-collapsed .nav-item span:not(.nav-badge):not(:first-child) {
-      display: none !important;
+    .container.sidebar-collapsed .nav-item span:not(:first-child) {
+      font-size: 0 !important;
     }
 
     .container.sidebar-collapsed .nav-badge {
