@@ -136,7 +136,7 @@
     }
 
     .container.sidebar-collapsed .logo {
-      font-size: 14px !important;
+      font-size: 0 !important;
       font-weight: 700 !important;
       height: 40px;
       display: flex;
@@ -145,10 +145,12 @@
       white-space: nowrap;
       overflow: hidden;
       letter-spacing: 1px;
+      width: 60px;
     }
 
     .container.sidebar-collapsed .logo::before {
       content: "H-F";
+      font-size: 14px;
       color: var(--text-primary);
     }
 
