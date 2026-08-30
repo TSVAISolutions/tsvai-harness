@@ -103,28 +103,26 @@ dashboard:
 	@echo "🔌 Starting port-forward on port 8080..."
 	@pf_pid=$$(kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & echo $$!); \
 	sleep 8 && \
-	echo "✅ Waiting for service to respond..." && \
+	echo "✅ Waiting for service to be fully ready..." && \
 	success=false; \
 	for i in {1..20}; do \
-		if curl -s -f http://localhost:8080 > /dev/null 2>&1; then \
-			echo "✅ Service is responding!"; \
+		if curl -s -f http://localhost:8080/api/health > /dev/null 2>&1; then \
+			echo "✅ Service is fully ready!"; \
 			open http://localhost:8080; \
 			echo "✅ Dashboard opened (running on localhost:8080)"; \
 			success=true; \
 			break; \
 		fi; \
 		if [ $$i -le 5 ]; then \
-			echo "  Checking service ($$i/20)..."; \
+			echo "  Checking readiness ($$i/20)..."; \
 		elif [ $$(( $$i % 5 )) -eq 0 ]; then \
 			echo "  Still waiting ($$i/20)..."; \
 		fi; \
 		sleep 1; \
 	done; \
 	if [ "$$success" = "false" ]; then \
-		echo "⚠️  Service taking longer to start (possibly first deployment)..."; \
-		open http://localhost:8080; \
-		echo "✅ Dashboard opened (running on localhost:8080)"; \
-		echo "💡 Page may take 10-15 seconds to load. Refresh if needed."; \
+		echo "⚠️  Service initialization taking longer than expected..."; \
+		echo "💡 Try running: make dashboard again"; \
 	fi
 
 # Development targets
