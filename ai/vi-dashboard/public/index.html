@@ -1491,7 +1491,8 @@ harness-factory/
         this.setTheme(savedTheme);
 
         // Load saved sidebar state
-        if (localStorage.getItem('sidebar-collapsed') === 'true') {
+        const shouldCollapse = localStorage.getItem('sidebar-collapsed') === 'true' || window.innerWidth <= 768;
+        if (shouldCollapse) {
           document.querySelector('.container').classList.add('sidebar-collapsed');
         }
       }
