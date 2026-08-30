@@ -603,7 +603,7 @@
           </div>
         </div>
 
-        <!-- Other Pages (Placeholder) -->
+        <!-- Start Page -->
         <div id="page-start" class="page hidden">
           <div class="card">
             <div class="card-title" style="margin-bottom: 20px;">Getting Started</div>
@@ -619,6 +619,131 @@
               <div class="item">
                 <div class="item-title">💡 Examples</div>
                 <div class="item-subtitle">Explore sample projects</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Otto AI Agent Collaboration Page -->
+        <div id="page-otto" class="page hidden" style="display: grid; grid-template-columns: 1fr 350px; gap: 24px; padding: 32px;">
+          <div>
+            <!-- Main Conversation Area -->
+            <div class="card" style="height: 100%; display: flex; flex-direction: column;">
+              <div class="card-header" style="margin-bottom: 16px;">
+                <div>
+                  <div class="card-title">🤖 Otto - Multi-Agent Research</div>
+                  <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Collaborative AI agents analyzing workflows</div>
+                </div>
+                <button style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px;">📋 Plan</button>
+              </div>
+
+              <div style="flex: 1; overflow-y: auto; margin-bottom: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <!-- Agent Message -->
+                  <div style="background: #0f172a; padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                      <span style="font-size: 16px;">🤖</span>
+                      <div>
+                        <div style="font-weight: 600; color: #f1f5f9;">Otto</div>
+                        <div style="font-size: 11px; color: #94a3b8;">AI May 12 • 12:01</div>
+                      </div>
+                    </div>
+                    <div style="color: #e2e8f0; font-size: 13px; line-height: 1.5;">
+                      Research loop complete. I've analyzed the workflow patterns. The system shows:
+                      <ul style="margin-left: 16px; margin-top: 8px; gap: 4px; display: flex; flex-direction: column;">
+                        <li>✓ 3 agents operational and healthy</li>
+                        <li>✓ Knowledge base at 95% coverage</li>
+                        <li>✓ System health score: 98%</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <!-- User Response -->
+                  <div style="background: #1e293b; padding: 12px; border-radius: 6px; border-left: 3px solid #10b981; margin-left: 32px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                      <span style="font-size: 16px;">👤</span>
+                      <div>
+                        <div style="font-weight: 600; color: #f1f5f9;">You</div>
+                        <div style="font-size: 11px; color: #94a3b8;">May 12 • 11:58</div>
+                      </div>
+                    </div>
+                    <div style="color: #e2e8f0; font-size: 13px;">
+                      What about the pending knowledge entries?
+                    </div>
+                  </div>
+
+                  <!-- Agent Analysis -->
+                  <div style="background: #0f172a; padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                      <span style="font-size: 16px;">🤖</span>
+                      <div>
+                        <div style="font-weight: 600; color: #f1f5f9;">Otto</div>
+                        <div style="font-size: 11px; color: #94a3b8;">AI May 12 • 11:57</div>
+                      </div>
+                    </div>
+                    <div style="color: #e2e8f0; font-size: 13px;">
+                      156 entries in queue. Recommended to process in batches of 50. ETA: 8 minutes. No immediate issues detected.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Input Area -->
+              <div style="display: flex; gap: 8px;">
+                <input type="text" placeholder="Ask Otto a research question..."
+                  style="flex: 1; background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 12px; color: #e2e8f0; font-size: 13px;">
+                <button style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">→</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Panel -->
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <!-- Session Info -->
+            <div class="card">
+              <div class="card-title" style="margin-bottom: 12px;">Session</div>
+              <div class="item-list">
+                <div class="item">
+                  <div class="item-title">Research Loop</div>
+                  <div class="item-subtitle"><span class="item-status">Active</span></div>
+                </div>
+                <div class="item">
+                  <div class="item-title">Agents</div>
+                  <div class="item-subtitle">3 agents involved</div>
+                </div>
+                <div class="item">
+                  <div class="item-title">Status</div>
+                  <div class="item-subtitle"><span class="item-status">Approved</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Agents -->
+            <div class="card">
+              <div class="card-title" style="margin-bottom: 12px;">Agents</div>
+              <div class="item-list" style="gap: 8px;">
+                <div style="padding: 8px; background: #0f172a; border-radius: 6px; border-left: 3px solid #3b82f6;">
+                  <div style="font-size: 13px; color: #f1f5f9;">🤖 Otto</div>
+                  <div style="font-size: 11px; color: #94a3b8;">Coordinator</div>
+                </div>
+                <div style="padding: 8px; background: #0f172a; border-radius: 6px; border-left: 3px solid #10b981;">
+                  <div style="font-size: 13px; color: #f1f5f9;">📊 Analyzer</div>
+                  <div style="font-size: 11px; color: #94a3b8;">Analysis Agent</div>
+                </div>
+                <div style="padding: 8px; background: #0f172a; border-radius: 6px; border-left: 3px solid #f59e0b;">
+                  <div style="font-size: 13px; color: #f1f5f9;">🔍 Researcher</div>
+                  <div style="font-size: 11px; color: #94a3b8;">Research Agent</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="card">
+              <div class="card-title" style="margin-bottom: 12px;">Next</div>
+              <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                1. Review findings
+                <br>2. Process pending entries
+                <br>3. Implement recommendations
               </div>
             </div>
           </div>
@@ -658,7 +783,7 @@
           page.classList.remove('hidden');
         }
 
-        // Update title
+        // Update title and handle special page layouts
         const titles = {
           home: 'Home',
           start: 'Start',
@@ -680,6 +805,14 @@
           prototypes: 'Prototypes'
         };
         document.getElementById('page-title').textContent = titles[pageName] || pageName;
+
+        // Adjust content padding for otto page
+        const content = document.getElementById('content');
+        if (pageName === 'otto') {
+          content.style.padding = '0';
+        } else {
+          content.style.padding = '32px';
+        }
       }
     }
 
