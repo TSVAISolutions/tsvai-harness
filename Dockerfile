@@ -1,4 +1,4 @@
-# Multi-stage build for TSVAI Harness
+# Multi-stage build for Harness Factory
 
 # Stage 1: Builder
 FROM node:18-alpine AS builder
@@ -20,20 +20,20 @@ WORKDIR /app
 RUN apk add --no-cache dumb-init
 
 # Create non-root user (use available UID if 1000 is taken)
-RUN addgroup -g 1001 tsvai && adduser -D -u 1001 -G tsvai tsvai || adduser -D tsvai
+RUN addgroup -g 1001 harness && adduser -D -u 1001 -G harness harness || adduser -D harness
 
 # Copy node_modules from builder
 COPY --from=builder /app/node_modules ./node_modules
 
 # Copy application code
-COPY --chown=tsvai:tsvai . .
+COPY --chown=harness:harness . .
 
 # Create required directories
-RUN mkdir -p /data/brain-wiki /var/log/tsvai && \
-    chown -R tsvai:tsvai /data /var/log/tsvai
+RUN mkdir -p /data/brain-wiki /var/log/harness && \
+    chown -R harness:harness /data /var/log/harness
 
 # Switch to non-root user
-USER tsvai
+USER harness
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \

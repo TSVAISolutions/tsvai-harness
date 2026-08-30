@@ -1,4 +1,4 @@
-# TSVAI Harness - Commands Reference Card
+# Harness Factory - Commands Reference Card
 
 Quick reference for all common commands. Print this or bookmark it!
 
@@ -59,16 +59,16 @@ npm test -- --coverage ai/brain-wiki
 
 ```bash
 # Build image
-docker build -t tsvai-harness:latest .
+docker build -t harness-factory:latest .
 
 # Build with no cache
-docker build --no-cache -t tsvai-harness:latest .
+docker build --no-cache -t harness-factory:latest .
 
 # View images
 docker images | grep tsvai
 
 # Run container locally
-docker run -p 3000:3000 -p 3001:3001 tsvai-harness:latest
+docker run -p 3000:3000 -p 3001:3001 harness-factory:latest
 
 # View running containers
 docker ps | grep tsvai
@@ -110,25 +110,25 @@ kubectl delete -f k8s/
 
 ```bash
 # View all pods
-kubectl get pods -n tsvai
+kubectl get pods -n harness-factory
 
 # Watch pods (live updates)
-kubectl get pods -n tsvai -w
+kubectl get pods -n harness-factory -w
 
 # View services
-kubectl get svc -n tsvai
+kubectl get svc -n harness-factory
 
 # View deployments
-kubectl get deployments -n tsvai
+kubectl get deployments -n harness-factory
 
 # Check rollout status
-kubectl rollout status deployment/tsvai-harness -n tsvai
+kubectl rollout status deployment/harness-factory -n harness-factory
 
 # View pod details
-kubectl describe pod <pod-name> -n tsvai
+kubectl describe pod <pod-name> -n harness-factory
 
 # View deployment details
-kubectl describe deployment tsvai-harness -n tsvai
+kubectl describe deployment harness-factory -n harness-factory
 ```
 
 ---
@@ -137,28 +137,28 @@ kubectl describe deployment tsvai-harness -n tsvai
 
 ```bash
 # View logs from all pods
-kubectl logs -n tsvai -l app=tsvai-harness -f
+kubectl logs -n harness-factory -l app=harness-factory -f
 
 # View logs from specific pod
-kubectl logs -n tsvai <pod-name> -f
+kubectl logs -n harness-factory <pod-name> -f
 
 # View previous logs (if crashed)
-kubectl logs -n tsvai <pod-name> --previous
+kubectl logs -n harness-factory <pod-name> --previous
 
 # View tail of logs
-kubectl logs -n tsvai <pod-name> --tail=50
+kubectl logs -n harness-factory <pod-name> --tail=50
 
 # Get shell access to pod
-kubectl exec -it -n tsvai <pod-name> -- /bin/sh
+kubectl exec -it -n harness-factory <pod-name> -- /bin/sh
 
 # Run command in pod
-kubectl exec -n tsvai <pod-name> -- npm test
+kubectl exec -n harness-factory <pod-name> -- npm test
 
 # Copy file from pod
 kubectl cp tsvai/<pod-name>:/path/to/file ./local/file
 
 # View recent events
-kubectl get events -n tsvai --sort-by='.lastTimestamp'
+kubectl get events -n harness-factory --sort-by='.lastTimestamp'
 ```
 
 ---
@@ -167,13 +167,13 @@ kubectl get events -n tsvai --sort-by='.lastTimestamp'
 
 ```bash
 # Forward API (port 3000)
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 
 # Forward Dashboard (port 3001)
-kubectl port-forward -n tsvai svc/tsvai-dashboard 3001:3001 &
+kubectl port-forward -n harness-factory svc/tsvai-dashboard 3001:3001 &
 
 # Forward to specific pod
-kubectl port-forward -n tsvai <pod-name> 3000:3000
+kubectl port-forward -n harness-factory <pod-name> 3000:3000
 
 # Kill all port-forwards
 pkill -f "port-forward"
@@ -188,21 +188,21 @@ ps aux | grep port-forward
 
 ```bash
 # Scale to specific number of replicas
-kubectl scale deployment tsvai-harness -n tsvai --replicas=5
+kubectl scale deployment harness-factory -n harness-factory --replicas=5
 
 # Restart deployment
-kubectl rollout restart deployment/tsvai-harness -n tsvai
+kubectl rollout restart deployment/harness-factory -n harness-factory
 
 # Update image
-kubectl set image deployment/tsvai-harness \
-  -n tsvai \
-  tsvai-harness=tsvai-harness:v1.1
+kubectl set image deployment/harness-factory \
+  -n harness-factory \
+  harness-factory=harness-factory:v1.1
 
 # Watch rollout progress
-kubectl rollout status deployment/tsvai-harness -n tsvai -w
+kubectl rollout status deployment/harness-factory -n harness-factory -w
 
 # Rollback to previous version
-kubectl rollout undo deployment/tsvai-harness -n tsvai
+kubectl rollout undo deployment/harness-factory -n harness-factory
 ```
 
 ---
@@ -289,16 +289,16 @@ curl http://localhost:3000/api/diagnostics | jq
 
 ```bash
 # Check resource usage (requires metrics-server)
-kubectl top pods -n tsvai
+kubectl top pods -n harness-factory
 
 # Check CPU usage per pod
-kubectl top pods -n tsvai --sort-by=cpu
+kubectl top pods -n harness-factory --sort-by=cpu
 
 # Check memory usage per pod
-kubectl top pods -n tsvai --sort-by=memory
+kubectl top pods -n harness-factory --sort-by=memory
 
 # View resource requests/limits
-kubectl describe deployment tsvai-harness -n tsvai | grep -A 10 "Resources"
+kubectl describe deployment harness-factory -n harness-factory | grep -A 10 "Resources"
 
 # Check node resources
 kubectl top nodes
@@ -320,19 +320,19 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443 &
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
 # Add repository
-argocd repo add https://github.com/TSVAISolutions/tsvai-harness
+argocd repo add https://github.com/Harness FactorySolutions/harness-factory
 
 # Create application
 kubectl apply -f k8s/argocd-application.yaml
 
 # Get application status
-argocd app get tsvai-harness
+argocd app get harness-factory
 
 # Sync application
-argocd app sync tsvai-harness
+argocd app sync harness-factory
 
 # Wait for sync
-argocd app wait tsvai-harness --sync
+argocd app wait harness-factory --sync
 
 # List all applications
 argocd app list
@@ -399,20 +399,20 @@ Add these to your `~/.bashrc` or `~/.zshrc`:
 # Harness shortcuts
 alias h-test='npm test'
 alias h-deploy='./deploy.sh --full'
-alias h-pods='kubectl get pods -n tsvai'
-alias h-logs='kubectl logs -n tsvai -l app=tsvai-harness -f'
+alias h-pods='kubectl get pods -n harness-factory'
+alias h-logs='kubectl logs -n harness-factory -l app=harness-factory -f'
 alias h-health='curl http://localhost:3000/api/health | jq'
 alias h-status='curl http://localhost:3000/api/status | jq'
-alias h-forward='kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 & kubectl port-forward -n tsvai svc/tsvai-dashboard 3001:3001 &'
+alias h-forward='kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 & kubectl port-forward -n harness-factory svc/tsvai-dashboard 3001:3001 &'
 
 # Kubernetes shortcuts
 alias k=kubectl
 alias kg='kubectl get'
-alias kgp='kubectl get pods -n tsvai'
-alias kgd='kubectl get deployment -n tsvai'
-alias kgs='kubectl get svc -n tsvai'
+alias kgp='kubectl get pods -n harness-factory'
+alias kgd='kubectl get deployment -n harness-factory'
+alias kgs='kubectl get svc -n harness-factory'
 alias kd='kubectl describe'
-alias kdp='kubectl describe pod -n tsvai'
+alias kdp='kubectl describe pod -n harness-factory'
 ```
 
 ---
@@ -421,7 +421,7 @@ alias kdp='kubectl describe pod -n tsvai'
 
 ```bash
 # Deploy and forward immediately
-./deploy.sh --deploy-k8s && sleep 5 && kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+./deploy.sh --deploy-k8s && sleep 5 && kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 
 # Run all tests and show coverage
 npm test -- --coverage
@@ -430,16 +430,16 @@ npm test -- --coverage
 npm test -- --testNamePattern="Data Ingestion"
 
 # View logs and follow
-kubectl logs -n tsvai -l app=tsvai-harness -f
+kubectl logs -n harness-factory -l app=harness-factory -f
 
 # Get all pod names
-kubectl get pods -n tsvai -o name
+kubectl get pods -n harness-factory -o name
 
 # Delete all pods and redeploy
-kubectl delete pods -n tsvai -l app=tsvai-harness && kubectl apply -f k8s/deployment.yaml
+kubectl delete pods -n harness-factory -l app=harness-factory && kubectl apply -f k8s/deployment.yaml
 
 # Scale and monitor
-kubectl scale deployment tsvai-harness -n tsvai --replicas=5 && kubectl get pods -n tsvai -w
+kubectl scale deployment harness-factory -n harness-factory --replicas=5 && kubectl get pods -n harness-factory -w
 
 # Test workflow with pretty output
 curl -s http://localhost:3000/api/workflows | jq '.'
@@ -456,13 +456,13 @@ curl -s http://localhost:3000/api/events | jq '.events[-10:] | .[] | {type, time
 # Something broken? Try these in order:
 
 # 1. Check if pods are running
-kubectl get pods -n tsvai
+kubectl get pods -n harness-factory
 
 # 2. Check pod logs
-kubectl logs -n tsvai <pod-name>
+kubectl logs -n harness-factory <pod-name>
 
 # 3. Check pod events
-kubectl describe pod -n tsvai <pod-name>
+kubectl describe pod -n harness-factory <pod-name>
 
 # 4. Check API health
 curl http://localhost:3000/api/health
@@ -471,19 +471,19 @@ curl http://localhost:3000/api/health
 curl http://localhost:3000/api/diagnostics | jq
 
 # 6. Restart deployment
-kubectl rollout restart deployment/tsvai-harness -n tsvai
+kubectl rollout restart deployment/harness-factory -n harness-factory
 
 # 7. Check all events
-kubectl get events -n tsvai --sort-by='.lastTimestamp'
+kubectl get events -n harness-factory --sort-by='.lastTimestamp'
 
 # 8. Check resource usage
-kubectl top pods -n tsvai
+kubectl top pods -n harness-factory
 
 # 9. Redeploy from scratch
 kubectl delete -f k8s/ && kubectl apply -f k8s/
 
 # 10. Check logs in real-time
-kubectl logs -n tsvai -l app=tsvai-harness -f
+kubectl logs -n harness-factory -l app=harness-factory -f
 ```
 
 ---
@@ -492,7 +492,7 @@ kubectl logs -n tsvai -l app=tsvai-harness -f
 
 ```bash
 # Backup brain-wiki data
-kubectl exec -n tsvai <pod-name> -- tar -czf /tmp/brain-wiki.tar.gz /data/brain-wiki
+kubectl exec -n harness-factory <pod-name> -- tar -czf /tmp/brain-wiki.tar.gz /data/brain-wiki
 
 # Copy backup from pod
 kubectl cp tsvai/<pod-name>:/tmp/brain-wiki.tar.gz ./brain-wiki-backup.tar.gz
@@ -502,7 +502,7 @@ ls -lh *backup*.tar.gz
 
 # Restore from backup
 kubectl cp ./brain-wiki-backup.tar.gz tsvai/<pod-name>:/tmp/
-kubectl exec -n tsvai <pod-name> -- tar -xzf /tmp/brain-wiki-backup.tar.gz -C /
+kubectl exec -n harness-factory <pod-name> -- tar -xzf /tmp/brain-wiki-backup.tar.gz -C /
 ```
 
 ---
@@ -531,7 +531,7 @@ git push origin feature/my-feature
 ./deploy.sh --deploy-k8s
 
 # Monitor
-kubectl logs -n tsvai -l app=tsvai-harness -f
+kubectl logs -n harness-factory -l app=harness-factory -f
 ```
 
 ---
@@ -540,11 +540,11 @@ kubectl logs -n tsvai -l app=tsvai-harness -f
 
 ```bash
 # Pod is in crash loop? Check logs
-kubectl logs -n tsvai <pod-name> --previous
+kubectl logs -n harness-factory <pod-name> --previous
 
 # Can't connect to API? Kill and restart port-forward
 pkill -f "port-forward"
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000
 
 # Out of disk space? Clean up
 docker system prune -a
@@ -552,11 +552,11 @@ rm -rf node_modules
 npm install
 
 # Running out of memory? Scale down
-kubectl scale deployment tsvai-harness -n tsvai --replicas=1
+kubectl scale deployment harness-factory -n harness-factory --replicas=1
 
 # Deployment stuck? Force restart
-kubectl rollout restart deployment/tsvai-harness -n tsvai
-kubectl wait --for=condition=available --timeout=300s deployment/tsvai-harness -n tsvai
+kubectl rollout restart deployment/harness-factory -n harness-factory
+kubectl wait --for=condition=available --timeout=300s deployment/harness-factory -n harness-factory
 
 # Everything broken? Full redeploy
 kubectl delete ns tsvai
@@ -567,7 +567,7 @@ kubectl delete ns tsvai
 
 **Print this page and keep it handy!** 📋
 
-Save as bookmark: `tsvai-harness/COMMANDS_REFERENCE.md`
+Save as bookmark: `harness-factory/COMMANDS_REFERENCE.md`
 
 **Version**: 1.0.0  
 **Last Updated**: 2026-08-29

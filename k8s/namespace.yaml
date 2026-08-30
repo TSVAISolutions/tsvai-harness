@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: tsvai
+  name: harness-factory
   labels:
-    name: tsvai
+    name: harness-factory
 ---
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: tsvai-quota
-  namespace: tsvai
+  name: harness-factory-quota
+  namespace: harness-factory
 spec:
   hard:
     requests.cpu: "4"
@@ -21,8 +21,8 @@ spec:
 apiVersion: v1
 kind: LimitRange
 metadata:
-  name: tsvai-limits
-  namespace: tsvai
+  name: harness-factory-limits
+  namespace: harness-factory
 spec:
   limits:
   - max:

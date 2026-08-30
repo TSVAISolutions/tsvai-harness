@@ -1,6 +1,6 @@
-# TSVAI Harness - Onboarding Guide for New Starters
+# Harness Factory - Onboarding Guide for New Starters
 
-Welcome to the TSVAI Harness team! This guide will help you get up and running in 30 minutes.
+Welcome to the Harness Factory team! This guide will help you get up and running in 30 minutes.
 
 ---
 
@@ -10,8 +10,8 @@ Welcome to the TSVAI Harness team! This guide will help you get up and running i
 
 ```bash
 # Clone with all submodules
-git clone --recursive https://github.com/TSVAISolutions/tsvai-harness.git
-cd tsvai-harness
+git clone --recursive https://github.com/Harness FactorySolutions/harness-factory.git
+cd harness-factory
 
 # Verify submodules are loaded
 git submodule status
@@ -72,7 +72,7 @@ npm test
 ### 2.1 The 7 Core Components
 
 ```
-tsvai-harness/ai/
+harness-factory/ai/
 ├── plugin/              # Plugin system + skills
 ├── army-agents/         # Multi-agent coordination
 ├── brain-wiki/          # Knowledge base
@@ -143,10 +143,10 @@ ai/integration/
 
 ```bash
 # API (keep terminal open)
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 
 # Dashboard (new terminal)
-kubectl port-forward -n tsvai svc/tsvai-dashboard 3001:3001 &
+kubectl port-forward -n harness-factory svc/tsvai-dashboard 3001:3001 &
 
 # Test API
 curl http://localhost:3000/api/health | jq
@@ -178,7 +178,7 @@ curl -X POST http://localhost:3000/api/workflows/execute \
 ### 4.1 Project Structure Overview
 
 ```
-tsvai-harness/
+harness-factory/
 ├── QUICK_START.md                 ← Read this first
 ├── TESTING_GUIDE.md               ← Testing procedures
 ├── KUBERNETES_DEPLOYMENT.md       ← K8s guide
@@ -531,20 +531,20 @@ docker system prune -a
 ./deploy.sh --build
 
 # Or manually
-docker build --no-cache -t tsvai-harness:latest .
+docker build --no-cache -t harness-factory:latest .
 ```
 
 ### Issue: Pods won't start on Kubernetes
 
 ```bash
 # Check pod logs
-kubectl logs -n tsvai <pod-name>
+kubectl logs -n harness-factory <pod-name>
 
 # Check pod description
-kubectl describe pod -n tsvai <pod-name>
+kubectl describe pod -n harness-factory <pod-name>
 
 # Check events
-kubectl get events -n tsvai --sort-by='.lastTimestamp'
+kubectl get events -n harness-factory --sort-by='.lastTimestamp'
 
 # Redeploy
 ./deploy.sh --deploy-k8s
@@ -557,7 +557,7 @@ kubectl get events -n tsvai --sort-by='.lastTimestamp'
 ps aux | grep port-forward
 
 # Start port-forward
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 
 # Test connectivity
 curl http://localhost:3000/api/health
@@ -567,13 +567,13 @@ curl http://localhost:3000/api/health
 
 ```bash
 # Check resource usage
-kubectl top pods -n tsvai
+kubectl top pods -n harness-factory
 
 # Check pod logs for errors
-kubectl logs -n tsvai <pod-name> --tail=100
+kubectl logs -n harness-factory <pod-name> --tail=100
 
 # Scale down replicas
-kubectl scale deployment tsvai-harness -n tsvai --replicas=1
+kubectl scale deployment harness-factory -n harness-factory --replicas=1
 ```
 
 ---

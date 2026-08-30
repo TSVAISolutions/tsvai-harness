@@ -2,12 +2,12 @@
 
 # Default target
 help:
-	@echo "TSVAI Harness - Makefile Commands"
+	@echo "Harness Factory - Makefile Commands"
 	@echo "=================================="
 	@echo ""
 	@echo "Deployment:"
-	@echo "  make up              - Deploy TSVAI Harness to Kubernetes"
-	@echo "  make down            - Remove TSVAI Harness from Kubernetes"
+	@echo "  make up              - Deploy Harness Factory to Kubernetes"
+	@echo "  make down            - Remove Harness Factory from Kubernetes"
 	@echo "  make restart         - Restart the deployment (rolling restart)"
 	@echo ""
 	@echo "Access & Monitoring:"
@@ -29,39 +29,39 @@ help:
 
 # Deployment targets
 up:
-	@echo "🚀 Deploying TSVAI Harness..."
+	@echo "🚀 Deploying Harness Factory..."
 	@kubectl apply -f k8s/namespace.yaml
 	@kubectl apply -f k8s/configmap.yaml
 	@kubectl apply -f k8s/deployment.yaml
 	@kubectl apply -f k8s/service.yaml
 	@echo "⏳ Waiting for deployment to be ready..."
-	@kubectl rollout status deployment/tsvai-harness -n tsvai --timeout=60s || echo "⚠️  Deployment timeout (pod may still be starting)"
+	@kubectl rollout status deployment/harness-factory -n harness-factory --timeout=60s || echo "⚠️  Deployment timeout (pod may still be starting)"
 	@echo ""
 	@echo "✅ Deployment complete!"
 	@echo ""
 	@echo "Access dashboard:"
-	@echo "  kubectl port-forward -n tsvai svc/tsvai-harness-api 8080:3000"
+	@echo "  kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000"
 	@echo "  open http://localhost:8080"
 	@echo ""
 	@echo "Or use NodePort:"
 	@echo "  open http://localhost:30000"
 
 down:
-	@echo "🛑 Removing TSVAI Harness..."
+	@echo "🛑 Removing Harness Factory..."
 	@kubectl delete -f k8s/deployment.yaml --ignore-not-found=true
 	@kubectl delete -f k8s/service.yaml --ignore-not-found=true
 	@kubectl delete -f k8s/configmap.yaml --ignore-not-found=true
-	@echo "✅ TSVAI Harness removed"
+	@echo "✅ Harness Factory removed"
 
 restart:
 	@echo "🔄 Restarting deployment..."
-	@kubectl rollout restart deployment/tsvai-harness -n tsvai
-	@kubectl rollout status deployment/tsvai-harness -n tsvai --timeout=60s
+	@kubectl rollout restart deployment/harness-factory -n harness-factory
+	@kubectl rollout status deployment/harness-factory -n harness-factory --timeout=60s
 	@echo "✅ Deployment restarted"
 
 clean:
 	@echo "🧹 Cleaning up (deleting namespace)..."
-	@kubectl delete namespace tsvai --ignore-not-found=true
+	@kubectl delete namespace harness-factory --ignore-not-found=true
 	@echo "✅ Cleanup complete"
 
 reset: down up
@@ -69,30 +69,30 @@ reset: down up
 
 # Monitoring & debugging
 logs:
-	@kubectl logs -n tsvai -l app=tsvai-harness -f --all-containers=true
+	@kubectl logs -n harness-factory -l app=harness-factory -f --all-containers=true
 
 status:
 	@echo "📊 Deployment Status"
 	@echo "===================="
-	@kubectl get deployment -n tsvai tsvai-harness -o wide
+	@kubectl get deployment -n harness-factory harness-factory -o wide
 	@echo ""
 	@echo "Pods:"
-	@kubectl get pods -n tsvai -o wide
+	@kubectl get pods -n harness-factory -o wide
 	@echo ""
 	@echo "Services:"
-	@kubectl get svc -n tsvai -o wide
+	@kubectl get svc -n harness-factory -o wide
 
 health:
 	@echo "❤️  System Health Check"
 	@echo "===================="
-	@kubectl port-forward -n tsvai svc/tsvai-harness-api 8888:3000 > /dev/null 2>&1 & \
+	@kubectl port-forward -n harness-factory svc/harness-factory-api 8888:3000 > /dev/null 2>&1 & \
 	sleep 2 && \
 	curl -s http://localhost:8888/api/health | jq '.' && \
 	pkill -f "kubectl port-forward.*8888" || true
 
 dashboard:
 	@echo "📊 Opening Dashboard..."
-	@kubectl port-forward -n tsvai svc/tsvai-harness-api 8080:3000 > /dev/null 2>&1 & \
+	@kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
 	sleep 2 && \
 	open http://localhost:8080 && \
 	echo "✅ Dashboard opened (running on localhost:8080)"
@@ -114,11 +114,11 @@ test:
 
 build:
 	@echo "🔨 Building Docker image..."
-	@docker build -t tsvai-harness:latest .
+	@docker build -t harness-factory:latest .
 	@echo "✅ Image built"
 	@echo ""
 	@echo "Loading into kind cluster..."
-	@kind load docker-image tsvai-harness:latest --name dev-cluster
+	@kind load docker-image harness-factory:latest --name dev-cluster
 	@echo "✅ Image loaded into cluster"
 
 rebuild: build restart
@@ -126,38 +126,38 @@ rebuild: build restart
 
 rebuild-no-cache:
 	@echo "🔨 Building Docker image (no cache)..."
-	@docker build --no-cache -t tsvai-harness:latest .
+	@docker build --no-cache -t harness-factory:latest .
 	@echo "✅ Image built (fresh layers)"
 	@echo ""
 	@echo "Loading into kind cluster..."
-	@kind load docker-image tsvai-harness:latest --name dev-cluster
+	@kind load docker-image harness-factory:latest --name dev-cluster
 	@echo "✅ Image loaded into cluster"
 	@echo ""
 	@echo "Restarting deployment..."
-	@kubectl rollout restart deployment/tsvai-harness -n tsvai
-	@kubectl rollout status deployment/tsvai-harness -n tsvai --timeout=60s
+	@kubectl rollout restart deployment/harness-factory -n harness-factory
+	@kubectl rollout status deployment/harness-factory -n harness-factory --timeout=60s
 	@echo "✅ Deployment restarted with new image"
 
 # Database/storage targets
 db-backup:
 	@echo "💾 Backing up database..."
-	@kubectl exec -n tsvai $$(kubectl get pods -n tsvai -l app=tsvai-harness -o jsonpath='{.items[0].metadata.name}') -- tar czf /tmp/backup.tar.gz /data/brain-wiki
-	@kubectl cp tsvai/$$(kubectl get pods -n tsvai -l app=tsvai-harness -o jsonpath='{.items[0].metadata.name}'):/tmp/backup.tar.gz ./backup-$(shell date +%Y%m%d-%H%M%S).tar.gz
+	@kubectl exec -n harness-factory $$(kubectl get pods -n harness-factory -l app=harness-factory -o jsonpath='{.items[0].metadata.name}') -- tar czf /tmp/backup.tar.gz /data/brain-wiki
+	@kubectl cp harness-factory/$$(kubectl get pods -n harness-factory -l app=harness-factory -o jsonpath='{.items[0].metadata.name}'):/tmp/backup.tar.gz ./backup-$(shell date +%Y%m%d-%H%M%S).tar.gz
 	@echo "✅ Backup created"
 
 # Quick access shortcuts
 port-forward:
 	@echo "🔌 Starting port-forward on port 8080..."
 	@echo "Access dashboard at: http://localhost:8080"
-	@kubectl port-forward -n tsvai svc/tsvai-harness-api 8080:3000
+	@kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000
 
 shell:
 	@echo "🐚 Opening pod shell..."
-	@kubectl exec -it -n tsvai $$(kubectl get pods -n tsvai -l app=tsvai-harness -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
+	@kubectl exec -it -n harness-factory $$(kubectl get pods -n harness-factory -l app=harness-factory -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
 
 describe:
 	@echo "📝 Pod details:"
-	@kubectl describe pod -n tsvai $$(kubectl get pods -n tsvai -l app=tsvai-harness -o jsonpath='{.items[0].metadata.name}')
+	@kubectl describe pod -n harness-factory $$(kubectl get pods -n harness-factory -l app=harness-factory -o jsonpath='{.items[0].metadata.name}')
 
 # Kubernetes cluster info
 k8s-info:

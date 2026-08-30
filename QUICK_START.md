@@ -1,6 +1,6 @@
-# TSVAI Harness - Quick Start Guide
+# Harness Factory - Quick Start Guide
 
-Get TSVAI Harness tested, built, and running on your local Kubernetes cluster in minutes.
+Get Harness Factory tested, built, and running on your local Kubernetes cluster in minutes.
 
 ---
 
@@ -32,7 +32,7 @@ If any are missing, install them first:
 ### 1.1 Run Full Deployment Script
 
 ```bash
-cd /Users/kbuchepalli/tsvai-harness
+cd /Users/kbuchepalli/harness-factory
 
 # Make script executable (one time)
 chmod +x deploy.sh
@@ -52,26 +52,26 @@ chmod +x deploy.sh
 
 ```bash
 # In a new terminal, watch pods starting
-kubectl get pods -n tsvai -w
+kubectl get pods -n harness-factory -w
 
 # Should see:
-# tsvai-harness-xxxxx   0/1   ContainerCreating
-# tsvai-harness-xxxxx   1/1   Running
+# harness-factory-xxxxx   0/1   ContainerCreating
+# harness-factory-xxxxx   1/1   Running
 ```
 
 ### 1.3 Verify Deployment
 
 ```bash
 # Check all pods are running
-kubectl get pods -n tsvai
+kubectl get pods -n harness-factory
 # Expected: 2 pods in Running state
 
 # Check services
-kubectl get svc -n tsvai
+kubectl get svc -n harness-factory
 # Expected: Multiple services
 
 # Check system health
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 curl http://localhost:3000/api/health | jq
 ```
 
@@ -86,7 +86,7 @@ Your harness is now running on Kubernetes!
 ### Step 1: Run Tests
 
 ```bash
-cd /Users/kbuchepalli/tsvai-harness
+cd /Users/kbuchepalli/harness-factory
 
 # Install dependencies
 npm install
@@ -108,10 +108,10 @@ npm test
 
 ```bash
 # Build image (takes ~2-3 minutes first time)
-docker build -t tsvai-harness:latest .
+docker build -t harness-factory:latest .
 
 # Verify build succeeded
-docker images | grep tsvai-harness
+docker images | grep harness-factory
 ```
 
 ### Step 3: Create Kubernetes Namespace
@@ -134,7 +134,7 @@ kubectl apply -f k8s/configmap.yaml
 kubectl apply -f k8s/deployment.yaml
 
 # Wait for rollout (~30-60 seconds)
-kubectl rollout status deployment/tsvai-harness -n tsvai
+kubectl rollout status deployment/harness-factory -n harness-factory
 ```
 
 ### Step 5: Create Services
@@ -144,17 +144,17 @@ kubectl rollout status deployment/tsvai-harness -n tsvai
 kubectl apply -f k8s/service.yaml
 
 # Verify services
-kubectl get svc -n tsvai
+kubectl get svc -n harness-factory
 ```
 
 ### Step 6: Access Application
 
 ```bash
 # Port-forward API (keep running in terminal)
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 
 # Port-forward Dashboard (new terminal)
-kubectl port-forward -n tsvai svc/tsvai-dashboard 3001:3001 &
+kubectl port-forward -n harness-factory svc/tsvai-dashboard 3001:3001 &
 
 # Test API is running
 curl http://localhost:3000/api/health
@@ -200,17 +200,17 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 kubectl apply -f k8s/argocd-application.yaml
 
 # Watch sync status
-argocd app get tsvai-harness
+argocd app get harness-factory
 ```
 
 ### Step 4: Verify Deployment
 
 ```bash
 # Check pods
-kubectl get pods -n tsvai
+kubectl get pods -n harness-factory
 
 # Check ArgoCD application
-argocd app get tsvai-harness
+argocd app get harness-factory
 ```
 
 ---
@@ -221,7 +221,7 @@ argocd app get tsvai-harness
 
 ```bash
 # Ensure port-forward is running
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 
 # Test health
 curl http://localhost:3000/api/health | jq
@@ -281,53 +281,53 @@ Dashboard shows:
 
 ```bash
 # Watch pods
-kubectl get pods -n tsvai -w
+kubectl get pods -n harness-factory -w
 
 # Stream logs from all pods
-kubectl logs -n tsvai -l app=tsvai-harness -f
+kubectl logs -n harness-factory -l app=harness-factory -f
 
 # View specific pod logs
-kubectl logs -n tsvai <pod-name> -f
+kubectl logs -n harness-factory <pod-name> -f
 
 # Get detailed pod info
-kubectl describe pod -n tsvai <pod-name>
+kubectl describe pod -n harness-factory <pod-name>
 
 # View recent events
-kubectl get events -n tsvai --sort-by='.lastTimestamp'
+kubectl get events -n harness-factory --sort-by='.lastTimestamp'
 ```
 
 ### Management
 
 ```bash
 # Scale deployment
-kubectl scale deployment tsvai-harness -n tsvai --replicas=5
+kubectl scale deployment harness-factory -n harness-factory --replicas=5
 
 # Restart deployment
-kubectl rollout restart deployment/tsvai-harness -n tsvai
+kubectl rollout restart deployment/harness-factory -n harness-factory
 
 # Update image
-kubectl set image deployment/tsvai-harness \
-  -n tsvai \
-  tsvai-harness=tsvai-harness:v1.1
+kubectl set image deployment/harness-factory \
+  -n harness-factory \
+  harness-factory=harness-factory:v1.1
 
 # Delete deployment
-kubectl delete -f k8s/ -n tsvai
+kubectl delete -f k8s/ -n harness-factory
 ```
 
 ### Debugging
 
 ```bash
 # Get shell in pod
-kubectl exec -it -n tsvai <pod-name> -- /bin/sh
+kubectl exec -it -n harness-factory <pod-name> -- /bin/sh
 
 # Run command in pod
-kubectl exec -n tsvai <pod-name> -- npm test
+kubectl exec -n harness-factory <pod-name> -- npm test
 
 # Copy file from pod
 kubectl cp tsvai/<pod-name>:/path/to/file ./local/file
 
 # Port-forward to debug
-kubectl port-forward -n tsvai <pod-name> 3000:3000
+kubectl port-forward -n harness-factory <pod-name> 3000:3000
 ```
 
 ---
@@ -338,30 +338,30 @@ kubectl port-forward -n tsvai <pod-name> 3000:3000
 
 ```bash
 # Check what's wrong
-kubectl describe pod -n tsvai <pod-name>
+kubectl describe pod -n harness-factory <pod-name>
 
 # Common causes:
 # 1. Insufficient resources
 #    kubectl describe node
 # 2. Image not found
-#    docker images | grep tsvai-harness
+#    docker images | grep harness-factory
 # 3. ConfigMap missing
-#    kubectl get configmap -n tsvai
+#    kubectl get configmap -n harness-factory
 ```
 
 ### Issue: Pods crash with "CrashLoopBackOff"
 
 ```bash
 # Check logs
-kubectl logs -n tsvai <pod-name>
+kubectl logs -n harness-factory <pod-name>
 
 # Common causes:
 # 1. Health check failing
 #    curl http://localhost:3000/api/health
 # 2. Configuration error
-#    kubectl describe configmap -n tsvai
+#    kubectl describe configmap -n harness-factory
 # 3. Image issues
-#    docker run tsvai-harness:latest
+#    docker run harness-factory:latest
 ```
 
 ### Issue: Can't connect to API
@@ -371,23 +371,23 @@ kubectl logs -n tsvai <pod-name>
 ps aux | grep port-forward
 
 # Start port-forward if needed
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 
 # Test connectivity
 curl http://localhost:3000/api/health
 
 # Check service exists
-kubectl get svc -n tsvai
+kubectl get svc -n harness-factory
 ```
 
 ### Issue: High memory usage
 
 ```bash
 # Check resource usage
-kubectl top pods -n tsvai
+kubectl top pods -n harness-factory
 
 # Check limits
-kubectl get deployment -n tsvai tsvai-harness -o yaml | grep -A 20 resources
+kubectl get deployment -n harness-factory harness-factory -o yaml | grep -A 20 resources
 
 # Adjust limits in k8s/deployment.yaml and reapply
 kubectl apply -f k8s/deployment.yaml
@@ -398,7 +398,7 @@ kubectl apply -f k8s/deployment.yaml
 ## File Structure Reference
 
 ```
-tsvai-harness/
+harness-factory/
 ├── deploy.sh                          # Automated deployment script
 ├── Dockerfile                         # Docker image definition
 ├── TESTING_GUIDE.md                   # Testing procedures
@@ -442,10 +442,10 @@ done
 
 ```bash
 # Increase replicas
-kubectl scale deployment tsvai-harness -n tsvai --replicas=5
+kubectl scale deployment harness-factory -n harness-factory --replicas=5
 
 # Monitor scaling
-kubectl get pods -n tsvai -w
+kubectl get pods -n harness-factory -w
 ```
 
 ### 4. Setup Persistence
@@ -467,11 +467,11 @@ Push changes to Git, ArgoCD automatically syncs to cluster.
 | **Manual K8s** | `./deploy.sh --deploy-k8s` |
 | **Setup ArgoCD** | `./deploy.sh --argocd` |
 | **GitOps Deploy** | `./deploy.sh --deploy-argocd` |
-| **View Pods** | `kubectl get pods -n tsvai` |
-| **View Logs** | `kubectl logs -n tsvai -l app=tsvai-harness -f` |
+| **View Pods** | `kubectl get pods -n harness-factory` |
+| **View Logs** | `kubectl logs -n harness-factory -l app=harness-factory -f` |
 | **Check Health** | `curl http://localhost:3000/api/health` |
 | **Access Dashboard** | `http://localhost:3001` |
-| **Scale Replicas** | `kubectl scale deployment tsvai-harness -n tsvai --replicas=5` |
+| **Scale Replicas** | `kubectl scale deployment harness-factory -n harness-factory --replicas=5` |
 
 ---
 

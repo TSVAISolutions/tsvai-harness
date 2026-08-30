@@ -1,7 +1,7 @@
 {
-  "name": "tsvai-harness",
+  "name": "harness-factory",
   "version": "1.0.0",
-  "description": "TSVAI Harness - AI Orchestration Platform",
+  "description": "Harness Factory - AI Orchestration Platform",
   "main": "server.js",
   "private": true,
   "workspaces": [
@@ -38,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TSVAISolutions/tsvai-harness.git"
+    "url": "https://github.com/TSVAISolutions/harness-factory.git"
   },
   "keywords": [
     "ai",
@@ -47,6 +47,6 @@
     "knowledge-base",
     "pattern-mining"
   ],
-  "author": "TSVAI Solutions",
+  "author": "Harness Factory",
   "license": "MIT"
 }

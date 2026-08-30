@@ -1,6 +1,6 @@
-# TSVAI Harness - Team Onboarding Master Guide
+# Harness Factory - Team Onboarding Master Guide
 
-Complete guide for onboarding all types of engineers to the TSVAI Harness project.
+Complete guide for onboarding all types of engineers to the Harness Factory project.
 
 ---
 
@@ -130,8 +130,8 @@ Perfect if you're:
 **Day 1 (All roles):**
 ```bash
 # 1. Setup (30 min)
-git clone --recursive https://github.com/TSVAISolutions/tsvai-harness.git
-cd tsvai-harness
+git clone --recursive https://github.com/Harness FactorySolutions/harness-factory.git
+cd harness-factory
 npm install
 
 # 2. Deploy (15 min)
@@ -586,4 +586,4 @@ You now have everything needed to:
 
 **Version**: 1.0.0  
 **Last Updated**: 2026-08-29  
-**For**: All TSVAI Harness team members
+**For**: All Harness Factory team members

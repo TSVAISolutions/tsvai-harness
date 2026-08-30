@@ -1,6 +1,6 @@
-# TSVAI Harness - Platform Engineer Onboarding Guide
+# Harness Factory - Platform Engineer Onboarding Guide
 
-Welcome to the Platform Engineering team! This guide covers infrastructure, deployment, monitoring, and operational aspects of the TSVAI Harness system.
+Welcome to the Platform Engineering team! This guide covers infrastructure, deployment, monitoring, and operational aspects of the Harness Factory system.
 
 ---
 
@@ -101,14 +101,14 @@ docker pull alpine
 
 ### 2.1 Kubernetes Architecture
 
-The TSVAI Harness runs on Kubernetes with this structure:
+The Harness Factory runs on Kubernetes with this structure:
 
 ```
 Kubernetes Cluster
 ├── kube-system (system namespace)
 ├── argocd (GitOps controller)
 └── tsvai (application namespace)
-    ├── Deployment: tsvai-harness (2-3 replicas)
+    ├── Deployment: harness-factory (2-3 replicas)
     ├── Services: API, Dashboard, LoadBalancer
     ├── ConfigMap: Application configuration
     ├── PersistentVolume: Brain-Wiki storage
@@ -140,7 +140,7 @@ Kubernetes Cluster
                        ↓
             ┌──────────────────────┐
             │   Docker Registry    │
-            │  tsvai-harness:vX.X  │
+            │  harness-factory:vX.X  │
             └──────────────────────┘
                        │
                        ↓
@@ -164,7 +164,7 @@ Kubernetes Cluster
 ### 2.3 Key Infrastructure Files
 
 ```
-tsvai-harness/
+harness-factory/
 ├── Dockerfile                       # Container image definition
 ├── k8s/                            # Kubernetes manifests
 │   ├── namespace.yaml              # Namespace + quotas + limits
@@ -197,7 +197,7 @@ kubectl apply -f k8s/deployment.yaml
 kubectl apply -f k8s/service.yaml
 
 # Verify rollout
-kubectl rollout status deployment/tsvai-harness -n tsvai
+kubectl rollout status deployment/harness-factory -n harness-factory
 ```
 
 ### 3.2 GitOps with ArgoCD
@@ -219,7 +219,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 kubectl port-forward svc/argocd-server -n argocd 8080:443 &
 
 # Add Git repository
-argocd repo add https://github.com/TSVAISolutions/tsvai-harness \
+argocd repo add https://github.com/Harness FactorySolutions/harness-factory \
   --username <username> \
   --password <token>
 
@@ -227,24 +227,24 @@ argocd repo add https://github.com/TSVAISolutions/tsvai-harness \
 kubectl apply -f k8s/argocd-application.yaml
 
 # Monitor sync
-argocd app wait tsvai-harness --sync
+argocd app wait harness-factory --sync
 ```
 
 ### 3.3 Scaling Operations
 
 ```bash
 # Manual scaling
-kubectl scale deployment tsvai-harness -n tsvai --replicas=5
+kubectl scale deployment harness-factory -n harness-factory --replicas=5
 
 # Horizontal Pod Autoscaler (HPA)
-kubectl autoscale deployment tsvai-harness -n tsvai \
+kubectl autoscale deployment harness-factory -n harness-factory \
   --min=2 --max=10 --cpu-percent=70
 
 # View HPA status
-kubectl get hpa -n tsvai
+kubectl get hpa -n harness-factory
 
 # Update resource limits
-kubectl set resources deployment tsvai-harness -n tsvai \
+kubectl set resources deployment harness-factory -n harness-factory \
   --requests=cpu=500m,memory=1Gi \
   --limits=cpu=2,memory=4Gi
 ```
@@ -253,18 +253,18 @@ kubectl set resources deployment tsvai-harness -n tsvai \
 
 ```bash
 # Update Docker image
-kubectl set image deployment/tsvai-harness \
-  -n tsvai \
-  tsvai-harness=tsvai-harness:v1.1
+kubectl set image deployment/harness-factory \
+  -n harness-factory \
+  harness-factory=harness-factory:v1.1
 
 # Monitor rollout
-kubectl rollout status deployment/tsvai-harness -n tsvai -w
+kubectl rollout status deployment/harness-factory -n harness-factory -w
 
 # Check rollout history
-kubectl rollout history deployment/tsvai-harness -n tsvai
+kubectl rollout history deployment/harness-factory -n harness-factory
 
 # Rollback if needed
-kubectl rollout undo deployment/tsvai-harness -n tsvai
+kubectl rollout undo deployment/harness-factory -n harness-factory
 ```
 
 ---
@@ -305,40 +305,40 @@ startupProbe:
 
 ```bash
 # Watch pod status
-kubectl get pods -n tsvai -w
+kubectl get pods -n harness-factory -w
 
 # View pod metrics (requires metrics-server)
-kubectl top pods -n tsvai
-kubectl top pods -n tsvai --sort-by=cpu
-kubectl top pods -n tsvai --sort-by=memory
+kubectl top pods -n harness-factory
+kubectl top pods -n harness-factory --sort-by=cpu
+kubectl top pods -n harness-factory --sort-by=memory
 
 # View node metrics
 kubectl top nodes
 
 # Check resource usage
-kubectl describe deployment tsvai-harness -n tsvai | grep -A 20 "Resources:"
+kubectl describe deployment harness-factory -n harness-factory | grep -A 20 "Resources:"
 
 # View events
-kubectl get events -n tsvai --sort-by='.lastTimestamp' | tail -20
+kubectl get events -n harness-factory --sort-by='.lastTimestamp' | tail -20
 ```
 
 ### 4.3 Logging
 
 ```bash
 # View logs from all pods
-kubectl logs -n tsvai -l app=tsvai-harness -f
+kubectl logs -n harness-factory -l app=harness-factory -f
 
 # View logs from specific pod
-kubectl logs -n tsvai <pod-name> -f
+kubectl logs -n harness-factory <pod-name> -f
 
 # View previous logs (if crashed)
-kubectl logs -n tsvai <pod-name> --previous
+kubectl logs -n harness-factory <pod-name> --previous
 
 # View with timestamps
-kubectl logs -n tsvai <pod-name> --timestamps=true
+kubectl logs -n harness-factory <pod-name> --timestamps=true
 
 # Follow specific error pattern
-kubectl logs -n tsvai -l app=tsvai-harness -f | grep ERROR
+kubectl logs -n harness-factory -l app=harness-factory -f | grep ERROR
 ```
 
 ### 4.4 Prometheus Integration (Optional)
@@ -361,23 +361,23 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: tsvai-alerts
-  namespace: tsvai
+  namespace: harness-factory
 spec:
   groups:
   - name: tsvai.rules
     interval: 30s
     rules:
     - alert: TsvaiPodDown
-      expr: count(up{job="tsvai-harness"} == 1) < 2
+      expr: count(up{job="harness-factory"} == 1) < 2
       for: 5m
       annotations:
-        summary: "TSVAI pod is down"
+        summary: "Harness Factory pod is down"
     
     - alert: HighMemoryUsage
       expr: container_memory_usage_bytes{pod=~"tsvai.*"} > 3e9
       for: 5m
       annotations:
-        summary: "High memory usage in TSVAI pods"
+        summary: "High memory usage in Harness Factory pods"
 ```
 
 ---
@@ -388,21 +388,21 @@ spec:
 
 ```bash
 # View current RBAC
-kubectl get roles -n tsvai
-kubectl get rolebindings -n tsvai
-kubectl get serviceaccounts -n tsvai
+kubectl get roles -n harness-factory
+kubectl get rolebindings -n harness-factory
+kubectl get serviceaccounts -n harness-factory
 
 # Create custom role
 kubectl create role pod-reader --verb=get --verb=list \
-  --resource=pods -n tsvai
+  --resource=pods -n harness-factory
 
 # Bind role to service account
 kubectl create rolebinding read-pods \
   --clusterrole=pod-reader \
-  --serviceaccount=tsvai:default -n tsvai
+  --serviceaccount=tsvai:default -n harness-factory
 
 # Test permissions
-kubectl auth can-i get pods --as=system:serviceaccount:tsvai:default -n tsvai
+kubectl auth can-i get pods --as=system:serviceaccount:tsvai:default -n harness-factory
 ```
 
 ### 5.2 Network Policies
@@ -413,11 +413,11 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: tsvai-network-policy
-  namespace: tsvai
+  namespace: harness-factory
 spec:
   podSelector:
     matchLabels:
-      app: tsvai-harness
+      app: harness-factory
   policyTypes:
   - Ingress
   ingress:
@@ -436,16 +436,16 @@ spec:
 # Create secrets for sensitive data
 kubectl create secret generic tsvai-secrets \
   --from-literal=db-password=secret123 \
-  -n tsvai
+  -n harness-factory
 
 # View secrets
-kubectl get secrets -n tsvai
+kubectl get secrets -n harness-factory
 
 # Update secret
-kubectl delete secret tsvai-secrets -n tsvai
+kubectl delete secret tsvai-secrets -n harness-factory
 kubectl create secret generic tsvai-secrets \
   --from-literal=db-password=newsecret123 \
-  -n tsvai
+  -n harness-factory
 
 # Use in deployment via environment variable:
 # env:
@@ -495,7 +495,7 @@ spec:
 
 ```bash
 # Backup Brain-Wiki data
-kubectl exec -n tsvai <pod-name> -- \
+kubectl exec -n harness-factory <pod-name> -- \
   tar -czf /tmp/brain-wiki-backup.tar.gz /data/brain-wiki
 
 # Copy backup from pod
@@ -503,10 +503,10 @@ kubectl cp tsvai/<pod-name>:/tmp/brain-wiki-backup.tar.gz \
   ./backups/brain-wiki-$(date +%Y%m%d).tar.gz
 
 # Backup entire namespace state
-kubectl get all -n tsvai -o yaml > tsvai-backup-$(date +%Y%m%d).yaml
+kubectl get all -n harness-factory -o yaml > tsvai-backup-$(date +%Y%m%d).yaml
 
 # Backup configmaps and secrets
-kubectl get cm,secret -n tsvai -o yaml > tsvai-configs-$(date +%Y%m%d).yaml
+kubectl get cm,secret -n harness-factory -o yaml > tsvai-configs-$(date +%Y%m%d).yaml
 ```
 
 ### 6.2 Restore Procedures
@@ -518,11 +518,11 @@ kubectl apply -f tsvai-backup-20260829.yaml
 # Restore data from backup
 kubectl cp ./backups/brain-wiki-20260829.tar.gz \
   tsvai/<pod-name>:/tmp/
-kubectl exec -n tsvai <pod-name> -- \
+kubectl exec -n harness-factory <pod-name> -- \
   tar -xzf /tmp/brain-wiki-20260829.tar.gz -C /
 
 # Verify restoration
-kubectl logs -n tsvai <pod-name> | grep "restored"
+kubectl logs -n harness-factory <pod-name> | grep "restored"
 ```
 
 ### 6.3 Disaster Recovery Plan
@@ -578,8 +578,8 @@ jobs:
       with:
         push: true
         tags: |
-          registry.example.com/tsvai-harness:${{ github.sha }}
-          registry.example.com/tsvai-harness:latest
+          registry.example.com/harness-factory:${{ github.sha }}
+          registry.example.com/harness-factory:latest
 
   deploy:
     needs: build
@@ -587,9 +587,9 @@ jobs:
     steps:
     - name: Deploy to cluster
       run: |
-        kubectl set image deployment/tsvai-harness \
-          -n tsvai \
-          tsvai-harness=registry.example.com/tsvai-harness:${{ github.sha }}
+        kubectl set image deployment/harness-factory \
+          -n harness-factory \
+          harness-factory=registry.example.com/harness-factory:${{ github.sha }}
 ```
 
 ### 7.2 Automated Testing
@@ -613,7 +613,7 @@ open coverage/index.html
 ./deploy.sh --deploy-k8s
 
 # For staged rollout:
-kubectl patch deployment tsvai-harness -n tsvai \
+kubectl patch deployment harness-factory -n harness-factory \
   -p '{"spec":{"strategy":{"type":"RollingUpdate","rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"}}}}'
 ```
 
@@ -625,7 +625,7 @@ kubectl patch deployment tsvai-harness -n tsvai \
 
 ```bash
 # Analyze current resource usage
-kubectl top pods -n tsvai
+kubectl top pods -n harness-factory
 
 # Adjust resource requests/limits based on actual usage
 # Update k8s/deployment.yaml:
@@ -645,15 +645,15 @@ kubectl apply -f k8s/deployment.yaml
 
 ```bash
 # Monitor query performance
-kubectl exec -n tsvai <pod-name> -- \
+kubectl exec -n harness-factory <pod-name> -- \
   psql -U user -d database -c "EXPLAIN ANALYZE SELECT ..."
 
 # Create indexes
-kubectl exec -n tsvai <pod-name> -- \
+kubectl exec -n harness-factory <pod-name> -- \
   psql -U user -d database -c "CREATE INDEX idx_brain_wiki_type ON knowledge(type);"
 
 # Vacuum and analyze
-kubectl exec -n tsvai <pod-name> -- \
+kubectl exec -n harness-factory <pod-name> -- \
   psql -U user -d database -c "VACUUM ANALYZE;"
 ```
 
@@ -662,14 +662,14 @@ kubectl exec -n tsvai <pod-name> -- \
 ```bash
 # Reduce Docker image size
 # Multi-stage builds already in Dockerfile
-docker build -t tsvai-harness:latest .
+docker build -t harness-factory:latest .
 
 # Check image size
-docker images | grep tsvai-harness
+docker images | grep harness-factory
 
 # Scan for vulnerabilities
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-  aquasec/trivy image tsvai-harness:latest
+  aquasec/trivy image harness-factory:latest
 ```
 
 ---
@@ -682,30 +682,30 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 
 ```bash
 # Diagnose
-kubectl describe pod -n tsvai <pod-name>
+kubectl describe pod -n harness-factory <pod-name>
 
 # Solutions:
 # 1. Insufficient resources
 kubectl describe nodes
 
 # 2. Image pull error
-kubectl logs -n tsvai <pod-name>
+kubectl logs -n harness-factory <pod-name>
 
 # 3. Missing ConfigMap
-kubectl get configmap -n tsvai
+kubectl get configmap -n harness-factory
 ```
 
 **Issue: High Memory Usage**
 
 ```bash
 # Check memory usage
-kubectl top pods -n tsvai
+kubectl top pods -n harness-factory
 
 # Check limits
-kubectl describe deployment tsvai-harness -n tsvai
+kubectl describe deployment harness-factory -n harness-factory
 
 # Increase limits
-kubectl set resources deployment tsvai-harness -n tsvai \
+kubectl set resources deployment harness-factory -n harness-factory \
   --limits=memory=4Gi
 ```
 
@@ -714,33 +714,33 @@ kubectl set resources deployment tsvai-harness -n tsvai \
 ```bash
 # Test DNS
 kubectl run -it --rm debug --image=busybox --restart=Never \
-  -n tsvai -- nslookup tsvai-harness-api
+  -n harness-factory -- nslookup harness-factory-api
 
 # Test port connectivity
-kubectl exec -it <pod-name> -n tsvai -- \
-  nc -zv tsvai-harness-api 3000
+kubectl exec -it <pod-name> -n harness-factory -- \
+  nc -zv harness-factory-api 3000
 
 # Check network policies
-kubectl get networkpolicies -n tsvai
+kubectl get networkpolicies -n harness-factory
 ```
 
 ### 9.2 Debugging Tools
 
 ```bash
 # Get shell access
-kubectl exec -it <pod-name> -n tsvai -- /bin/sh
+kubectl exec -it <pod-name> -n harness-factory -- /bin/sh
 
 # Run diagnostics
-curl -s http://tsvai-harness-api:3000/api/diagnostics | jq
+curl -s http://harness-factory-api:3000/api/diagnostics | jq
 
 # Check environment variables
-kubectl exec <pod-name> -n tsvai -- env
+kubectl exec <pod-name> -n harness-factory -- env
 
 # Check mounted volumes
-kubectl exec <pod-name> -n tsvai -- mount | grep data
+kubectl exec <pod-name> -n harness-factory -- mount | grep data
 
 # Inspect resource definitions
-kubectl get deployment tsvai-harness -n tsvai -o yaml
+kubectl get deployment harness-factory -n harness-factory -o yaml
 ```
 
 ### 9.3 Incident Response Playbook
@@ -750,15 +750,15 @@ kubectl get deployment tsvai-harness -n tsvai -o yaml
    └─ Alert fires or user reports issue
 
 2. Immediate Response (0-5 min)
-   ├─ Check pod status: kubectl get pods -n tsvai
-   ├─ Check logs: kubectl logs -n tsvai <pod>
+   ├─ Check pod status: kubectl get pods -n harness-factory
+   ├─ Check logs: kubectl logs -n harness-factory <pod>
    ├─ Check health: curl http://localhost:3000/api/health
    └─ Document issue in runbook
 
 3. Diagnosis (5-15 min)
    ├─ Check recent changes: git log --oneline -5
-   ├─ Check metrics: kubectl top pods -n tsvai
-   ├─ Check events: kubectl get events -n tsvai
+   ├─ Check metrics: kubectl top pods -n harness-factory
+   ├─ Check events: kubectl get events -n harness-factory
    └─ Interview application team
 
 4. Resolution (15-60 min)
@@ -882,8 +882,8 @@ For help with:
 
 ```bash
 # 1. Setup (15 min)
-git clone --recursive https://github.com/TSVAISolutions/tsvai-harness.git
-cd tsvai-harness
+git clone --recursive https://github.com/Harness FactorySolutions/harness-factory.git
+cd harness-factory
 ./deploy.sh --full
 
 # 2. Understand (30 min)
@@ -891,13 +891,13 @@ cat KUBERNETES_DEPLOYMENT.md
 cat k8s/*.yaml
 
 # 3. Monitor (ongoing)
-kubectl get pods -n tsvai -w
-kubectl logs -n tsvai -l app=tsvai-harness -f
+kubectl get pods -n harness-factory -w
+kubectl logs -n harness-factory -l app=harness-factory -f
 
 # 4. Operate (daily)
 kubectl get nodes
-kubectl top pods -n tsvai
-argocd app get tsvai-harness
+kubectl top pods -n harness-factory
+argocd app get harness-factory
 ```
 
 ---
@@ -905,7 +905,7 @@ argocd app get tsvai-harness
 **Welcome to Platform Engineering! 🚀**
 
 You now have everything you need to:
-✅ Deploy and manage the TSVAI Harness infrastructure  
+✅ Deploy and manage the Harness Factory infrastructure  
 ✅ Monitor system health and performance  
 ✅ Respond to incidents  
 ✅ Optimize resources  

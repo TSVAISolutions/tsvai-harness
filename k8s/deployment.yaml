@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tsvai-harness
-  namespace: tsvai
+  name: harness-factory
+  namespace: harness-factory
   labels:
-    app: tsvai-harness
+    app: harness-factory
     version: v1
 spec:
   replicas: 1
@@ -15,18 +15,18 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: tsvai-harness
+      app: harness-factory
   template:
     metadata:
       labels:
-        app: tsvai-harness
+        app: harness-factory
         version: v1
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "3000"
         prometheus.io/path: "/api/metrics"
     spec:
-      serviceAccountName: tsvai-harness
+      serviceAccountName: harness-factory
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -48,8 +48,8 @@ spec:
           mountPath: /data/brain-wiki
 
       containers:
-      - name: tsvai-harness
-        image: tsvai-harness:latest
+      - name: harness-factory
+        image: harness-factory:latest
         imagePullPolicy: IfNotPresent  # For local development
         ports:
         - name: api
@@ -156,7 +156,7 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - tsvai-harness
+                  - harness-factory
               topologyKey: kubernetes.io/hostname
 
       terminationGracePeriodSeconds: 30
@@ -164,14 +164,14 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tsvai-harness
-  namespace: tsvai
+  name: harness-factory
+  namespace: harness-factory
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: tsvai-harness
-  namespace: tsvai
+  name: harness-factory
+  namespace: harness-factory
 rules:
 - apiGroups: [""]
   resources: ["pods", "services"]
@@ -183,13 +183,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: tsvai-harness
-  namespace: tsvai
+  name: harness-factory
+  namespace: harness-factory
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: tsvai-harness
+  name: harness-factory
 subjects:
 - kind: ServiceAccount
-  name: tsvai-harness
-  namespace: tsvai
+  name: harness-factory
+  namespace: harness-factory

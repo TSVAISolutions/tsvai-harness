@@ -1,6 +1,6 @@
-# TSVAI Harness - Backend Engineer Onboarding Guide
+# Harness Factory - Backend Engineer Onboarding Guide
 
-Welcome to the Backend Engineering team! This guide covers the backend components, APIs, and core business logic of the TSVAI Harness.
+Welcome to the Backend Engineering team! This guide covers the backend components, APIs, and core business logic of the Harness Factory.
 
 ---
 
@@ -65,8 +65,8 @@ git --version
 
 ```bash
 # Clone with all submodules
-git clone --recursive https://github.com/TSVAISolutions/tsvai-harness.git
-cd tsvai-harness
+git clone --recursive https://github.com/Harness FactorySolutions/harness-factory.git
+cd harness-factory
 
 # Install dependencies
 npm install
@@ -83,7 +83,7 @@ cd ../integration && npm install
 ### 1.3 Backend Architecture
 
 ```
-TSVAI Harness Backend Architecture
+Harness Factory Backend Architecture
 ├── Integration Layer (ai/integration/)
 │   ├── HarnessOrchestrator
 │   ├── E2E Workflows

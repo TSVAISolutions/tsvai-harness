@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * TSVAI Harness Main Server
+ * Harness Factory Main Server
  * Central orchestration and API server
  */
 
@@ -30,7 +30,7 @@ let orchestrator;
  */
 async function initializeHarness() {
   try {
-    console.log('Initializing TSVAI Harness...');
+    console.log('Initializing Harness Factory...');
 
     orchestrator = new HarnessOrchestrator();
 
@@ -68,7 +68,7 @@ async function initializeHarness() {
       orchestrator.registerWorkflow('monitoring', workflows.monitoringWorkflow);
     }
 
-    console.log('✓ TSVAI Harness initialized');
+    console.log('✓ Harness Factory initialized');
     return true;
   } catch (error) {
     console.error('Failed to initialize harness:', error.message);
@@ -169,7 +169,7 @@ try {
 // Root route
 app.get('/', (req, res) => {
   res.json({
-    name: 'TSVAI Harness',
+    name: 'Harness Factory',
     version: '1.0.0',
     status: orchestrator ? 'ready' : 'not initialized',
     endpoints: {
@@ -203,7 +203,7 @@ initializeHarness().then(success => {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n✓ TSVAI Harness API listening on port ${PORT}`);
+    console.log(`\n✓ Harness Factory API listening on port ${PORT}`);
     console.log(`\nAccess:`);
     console.log(`  API:       http://localhost:${PORT}/api/health`);
     console.log(`  Dashboard: http://localhost:${PORT}/ (if available)`);

@@ -1,6 +1,6 @@
-# TSVAI Harness
+# Harness Factory
 
-Central workspace aggregating all TSVAI Solutions repositories as submodules + AI packages and plugins.
+Central workspace aggregating all Harness Factory repositories as submodules + AI packages and plugins.
 
 This repository is maintained **for AI agents and developers**. The authoritative entry points are:
 
@@ -15,8 +15,8 @@ This repository is maintained **for AI agents and developers**. The authoritativ
 
 ### 1. Clone with Submodules
 ```bash
-git clone --recursive https://github.com/TSVAISolutions/tsvai-harness.git
-cd tsvai-harness
+git clone --recursive https://github.com/Harness FactorySolutions/harness-factory.git
+cd harness-factory
 ```
 
 ### 2. Run Setup
@@ -34,9 +34,9 @@ make help                  # Show all commands
 ## Repository Structure
 
 ```
-tsvai-harness/
+harness-factory/
 ├── ai/                    # AI layer (plugins, skills, tools)
-├── submodules/            # TSVAI repos (lazy checkout)
+├── submodules/            # Harness Factory repos (lazy checkout)
 │   ├── frontend/
 │   ├── backend/
 │   └── platform/
@@ -78,7 +78,7 @@ Before starting work:
 
 ## Note: Vega Inheritance
 
-Some components (like `ai/cli/`) are submodules inherited from the vega harness. Features specific to vega platforms (LP/GP portals) do not apply to TSVAI. The CLI is reused for TSVAI operations; vega-specific commands can be ignored.
+Some components (like `ai/cli/`) are submodules inherited from the vega harness. Features specific to vega platforms (LP/GP portals) do not apply to Harness Factory. The CLI is reused for Harness Factory operations; vega-specific commands can be ignored.
 
 ## Contributing
 

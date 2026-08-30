@@ -1,6 +1,6 @@
-# TSVAI Harness
+# Harness Factory
 
-Monorepo aggregating all TSVAI Solutions repositories as submodules + AI packages and plugins.
+Monorepo aggregating all Harness Factory repositories as submodules + AI packages and plugins.
 
 ## Agent Registration (MANDATORY)
 
@@ -39,7 +39,7 @@ If you see a conflict with another agent working in the same area - coordinate o
 ## Repository Structure
 
 ```
-tsvai-harness/
+harness-factory/
 ├── ai/                          # AI LAYER (brain, tools, agents, plugins)
 │   ├── brain-wiki/              # Knowledge base & memory
 │   ├── cli/                     # CLI interface (tsvai command)
@@ -53,7 +53,7 @@ tsvai-harness/
 │   ├── plugin/                  # Core plugin system
 │   └── plugin-templates/        # Plugin templates & examples
 │
-├── submodules/                  # ALL TSVAISolutions REPOS (lazy checkout)
+├── submodules/                  # ALL Harness FactorySolutions REPOS (lazy checkout)
 │   ├── frontend/                # Frontend applications
 │   ├── backend/                 # Backend services (30+)
 │   └── platform/                # Platform infrastructure (23+)
@@ -118,7 +118,7 @@ git push
 
 ### ai/cli/
 
-TSVAISolutions/cli submodule - TSVAI command-line interface
+Harness FactorySolutions/cli submodule - Harness Factory command-line interface
 
 ```bash
 cd ai/cli
@@ -127,11 +127,11 @@ git pull origin main
 
 ### ai/ai-security/
 
-TSVAI security scanner submodule for vulnerability scanning
+Harness Factory security scanner submodule for vulnerability scanning
 
 ### ai/plugin/
 
-Core TSVAI plugin with:
+Core Harness Factory plugin with:
 - Text analysis capabilities
 - Claude skills definitions
 - MCP configuration
@@ -158,7 +158,7 @@ ai/plugin/
 
 ### ai/marketplace/
 
-TSVAI Claude Marketplace submodule for plugin distribution and discovery
+Harness Factory Claude Marketplace submodule for plugin distribution and discovery
 
 ## Plugin Builds
 
@@ -225,7 +225,7 @@ Triggered on changes to `ai/plugin/**`
 - `build-dev` - Creates `tsvai-dev-plugin.zip` (marked as [DEV])
 
 Both jobs:
-1. Download CLI from TSVAISolutions/cli release
+1. Download CLI from Harness FactorySolutions/cli release
 2. Stage plugin files
 3. Create zip archive
 4. Upload to CLI release repository
@@ -236,7 +236,7 @@ Both jobs:
 
 ```bash
 cd submodules/backend
-git submodule add https://github.com/TSVAISolutions/new-repo.git
+git submodule add https://github.com/Harness FactorySolutions/new-repo.git
 cd ..
 git add .gitmodules new-repo
 git commit -m "feat: add new-repo submodule"
@@ -322,4 +322,4 @@ bash scripts/build-plugin.sh
 
 **Version**: 1.0.0  
 **Last Updated**: 2026-08-25  
-**Maintained by**: TSVAI DevOps Team
+**Maintained by**: Harness Factory DevOps Team

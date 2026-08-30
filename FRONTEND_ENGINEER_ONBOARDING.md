@@ -1,6 +1,6 @@
-# TSVAI Harness - Frontend Engineer Onboarding Guide
+# Harness Factory - Frontend Engineer Onboarding Guide
 
-Welcome to the Frontend Engineering team! This guide covers everything you need to know about the VI-Dashboard and frontend components of the TSVAI Harness.
+Welcome to the Frontend Engineering team! This guide covers everything you need to know about the VI-Dashboard and frontend components of the Harness Factory.
 
 ---
 
@@ -62,8 +62,8 @@ npm install -g @angular/cli     # If using Angular
 
 ```bash
 # Clone with submodules
-git clone --recursive https://github.com/TSVAISolutions/tsvai-harness.git
-cd tsvai-harness
+git clone --recursive https://github.com/Harness FactorySolutions/harness-factory.git
+cd harness-factory
 
 # Install dependencies
 npm install
@@ -76,7 +76,7 @@ npm install
 ### 1.3 Project Structure - Frontend
 
 ```
-tsvai-harness/
+harness-factory/
 ├── ai/vi-dashboard/                 # Main dashboard component
 │   ├── src/
 │   │   ├── dashboard-server.js      # Express server
@@ -137,14 +137,14 @@ Components:
 
 ```bash
 # Terminal 1: Start the harness API
-cd /Users/kbuchepalli/tsvai-harness
+cd /Users/kbuchepalli/harness-factory
 ./deploy.sh --deploy-k8s
 
 # Or manually
 npm start
 
 # Terminal 2: Port-forward the dashboard
-kubectl port-forward -n tsvai svc/tsvai-dashboard 3001:3001 &
+kubectl port-forward -n harness-factory svc/tsvai-dashboard 3001:3001 &
 
 # Open in browser
 open http://localhost:3001
@@ -154,7 +154,7 @@ open http://localhost:3001
 
 ```bash
 # Port-forward API
-kubectl port-forward -n tsvai svc/tsvai-harness-api 3000:3000 &
+kubectl port-forward -n harness-factory svc/harness-factory-api 3000:3000 &
 
 # API endpoints
 # Health check
