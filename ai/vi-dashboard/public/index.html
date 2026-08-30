@@ -790,6 +790,32 @@
           <span>🧪</span> Prototypes
         </div>
       </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Integrations</div>
+        <div class="nav-item" data-page="slack">
+          <span>💬</span> Slack
+        </div>
+        <div class="nav-item" data-page="github">
+          <span>🐙</span> GitHub
+        </div>
+        <div class="nav-item" data-page="atlassian">
+          <span>🔗</span> Atlassian
+        </div>
+        <div class="nav-item" data-page="statsig">
+          <span>📊</span> Statsig
+        </div>
+        <div class="nav-item" data-page="aikido">
+          <span>🛡️</span> Aikido
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Internal</div>
+        <div class="nav-item" data-page="vchannel">
+          <span>📺</span> V-Channel
+        </div>
+      </div>
     </div>
 
     <!-- Main Content -->
@@ -1249,6 +1275,110 @@ harness-factory/
             </div>
           </div>
         </div>
+
+        <!-- Integrations Pages -->
+        <div id="page-slack" class="page hidden">
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 20px;">💬 Slack Integration</div>
+            <div style="color: var(--text-secondary); line-height: 1.8;">
+              <p style="margin-bottom: 12px;">Connect Harness Factory with Slack for real-time notifications and collaboration.</p>
+              <p style="margin-bottom: 16px;">
+                <strong>Features:</strong>
+              </p>
+              <ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <li>Agent status updates in channels</li>
+                <li>Real-time alerts and notifications</li>
+                <li>Integration with workflow automation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="page-github" class="page hidden">
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 20px;">🐙 GitHub Integration</div>
+            <div style="color: var(--text-secondary); line-height: 1.8;">
+              <p style="margin-bottom: 12px;">Integrate with GitHub for repository management and CI/CD pipelines.</p>
+              <p style="margin-bottom: 16px;">
+                <strong>Features:</strong>
+              </p>
+              <ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <li>Repository synchronization</li>
+                <li>Pull request tracking</li>
+                <li>Automated deployments</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="page-atlassian" class="page hidden">
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 20px;">🔗 Atlassian Integration</div>
+            <div style="color: var(--text-secondary); line-height: 1.8;">
+              <p style="margin-bottom: 12px;">Connect to Atlassian products for issue tracking and project management.</p>
+              <p style="margin-bottom: 16px;">
+                <strong>Features:</strong>
+              </p>
+              <ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <li>Jira issue synchronization</li>
+                <li>Confluence documentation integration</li>
+                <li>Project tracking and reporting</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="page-statsig" class="page hidden">
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 20px;">📊 Statsig Integration</div>
+            <div style="color: var(--text-secondary); line-height: 1.8;">
+              <p style="margin-bottom: 12px;">Feature flags and experimentation platform integration.</p>
+              <p style="margin-bottom: 16px;">
+                <strong>Features:</strong>
+              </p>
+              <ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <li>Feature flag management</li>
+                <li>A/B testing and experiments</li>
+                <li>Analytics and insights</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="page-aikido" class="page hidden">
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 20px;">🛡️ Aikido Integration</div>
+            <div style="color: var(--text-secondary); line-height: 1.8;">
+              <p style="margin-bottom: 12px;">Application security and vulnerability management.</p>
+              <p style="margin-bottom: 16px;">
+                <strong>Features:</strong>
+              </p>
+              <ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <li>Security scanning and monitoring</li>
+                <li>Vulnerability reporting</li>
+                <li>Compliance tracking</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Internal Pages -->
+        <div id="page-vchannel" class="page hidden">
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 20px;">📺 V-Channel</div>
+            <div style="color: var(--text-secondary); line-height: 1.8;">
+              <p style="margin-bottom: 12px;">Internal communication and video conferencing platform.</p>
+              <p style="margin-bottom: 16px;">
+                <strong>Features:</strong>
+              </p>
+              <ul style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <li>Video conferencing and streaming</li>
+                <li>Internal messaging and channels</li>
+                <li>Team collaboration tools</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1416,7 +1546,13 @@ harness-factory/
           otto: 'Otto',
           vicode: 'VI Code',
           spaces: 'Spaces',
-          prototypes: 'Prototypes'
+          prototypes: 'Prototypes',
+          slack: 'Slack Integration',
+          github: 'GitHub Integration',
+          atlassian: 'Atlassian Integration',
+          statsig: 'Statsig Integration',
+          aikido: 'Aikido Integration',
+          vchannel: 'V-Channel'
         };
         document.getElementById('page-title').textContent = titles[pageName] || pageName;
 
