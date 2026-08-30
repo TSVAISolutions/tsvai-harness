@@ -193,30 +193,28 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
+// Start server immediately (initialize in background)
 const PORT = process.env.HARNESS_PORT || 3000;
 
+// Start listening first
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n✓ Harness Factory API listening on port ${PORT}`);
+  console.log(`\nAccess:`);
+  console.log(`  API:       http://localhost:${PORT}/api/health`);
+  console.log(`  Dashboard: http://localhost:${PORT}/ (if available)`);
+  console.log(`\nInitializing components...`);
+});
+
+// Initialize harness in background (doesn't block server startup)
 initializeHarness().then(success => {
-  if (!success) {
-    console.warn('WARNING: Harness not fully initialized, but server starting anyway...');
+  if (success) {
+    console.log('✓ Harness Factory fully initialized');
+  } else {
+    console.warn('WARNING: Harness not fully initialized');
     console.warn('Run: npm install to complete setup');
   }
-
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n✓ Harness Factory API listening on port ${PORT}`);
-    console.log(`\nAccess:`);
-    console.log(`  API:       http://localhost:${PORT}/api/health`);
-    console.log(`  Dashboard: http://localhost:${PORT}/ (if available)`);
-    console.log(`\nNext steps:`);
-    console.log(`  1. Run: npm install`);
-    console.log(`  2. Deploy: ./deploy.sh --full`);
-    console.log(`\nDocumentation:`);
-    console.log(`  QUICK_START.md - Get started in 5 minutes`);
-    console.log(`  COMMANDS_REFERENCE.md - Common commands`);
-  });
 }).catch(error => {
-  console.error('Failed to start server:', error);
-  process.exit(1);
+  console.error('Initialization error:', error.message);
 });
 
 // Graceful shutdown
