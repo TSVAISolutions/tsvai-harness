@@ -100,8 +100,10 @@ dashboard:
 		sleep 1; \
 	done
 	@echo "✅ Pod is ready!"
-	@echo "🔌 Starting port-forward on port 8080..."
-	@kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
+	@pkill -f "port-forward.*8080" 2>/dev/null || true; \
+	sleep 1; \
+	echo "🔌 Starting port-forward on port 8080..." && \
+	kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
 	echo "⏳ Waiting for service to be ready..." && \
 	sleep 3 && \
 	success=false; \
@@ -123,7 +125,8 @@ dashboard:
 	done; \
 	if [ "$$success" = "false" ]; then \
 		echo "⚠️  Service didn't respond after 20 seconds"; \
-		echo "💡 Try: kubectl logs -n harness-factory -l app=harness-factory"; \
+		echo "💡 Try: pkill -f 'port-forward.*8080'"; \
+		echo "💡 Then: make dashboard"; \
 	fi
 
 # Development targets
