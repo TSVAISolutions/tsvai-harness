@@ -110,8 +110,7 @@ dashboard:
 	for i in {1..20}; do \
 		if curl -s -f http://localhost:8080/api/health > /dev/null 2>&1; then \
 			echo "✅ Service is ready!"; \
-			sleep 1; \
-			open http://localhost:8080; \
+			(sleep 1; open http://localhost:8080 2>/dev/null) & \
 			echo "✅ Dashboard opened at http://localhost:8080"; \
 			success=true; \
 			break; \
