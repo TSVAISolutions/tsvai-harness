@@ -100,38 +100,47 @@ dashboard:
 		sleep 1; \
 	done
 	@echo "✅ Pod is ready!"
-	@echo "🔌 Starting port-forward on port 8080..."
 	@echo "🔌 Starting port-forward on port 8080..." && \
-	pf_pid=$$(kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 2>&1 & echo $$!); \
-	sleep 3; \
-	echo "⏳ Verifying port-forward is ready..." && \
-	for attempt in {1..10}; do \
+	kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
+	PF_PID=$$!; \
+	sleep 2; \
+	echo "⏳ Waiting for port to be ready..." && \
+	PORT_READY=false; \
+	for attempt in {1..15}; do \
 		if timeout 1 bash -c "echo > /dev/tcp/localhost/8080" 2>/dev/null; then \
-			echo "✅ Port-forward ready!"; \
+			echo "✅ Port-forward connected!"; \
+			PORT_READY=true; \
 			break; \
 		fi; \
 		sleep 0.5; \
-	done && \
+	done; \
+	if [ "$$PORT_READY" = "false" ]; then \
+		echo "❌ Port-forward failed to connect"; \
+		kill $$PF_PID 2>/dev/null || true; \
+		exit 1; \
+	fi; \
 	echo "✅ Checking service health..." && \
-	success=false; \
-	for i in {1..20}; do \
+	SUCCESS=false; \
+	for i in {1..15}; do \
 		if curl -s -f http://localhost:8080/api/health > /dev/null 2>&1; then \
 			echo "✅ Service is ready!"; \
+			sleep 1; \
 			open http://localhost:8080; \
-			echo "✅ Dashboard opened (running on localhost:8080)"; \
-			success=true; \
+			echo "✅ Dashboard opened at http://localhost:8080"; \
+			SUCCESS=true; \
 			break; \
 		fi; \
-		if [ $$i -le 5 ]; then \
-			echo "  Health check ($$i/20)..."; \
-		elif [ $$(( $$i % 5 )) -eq 0 ]; then \
-			echo "  Waiting ($$i/20)..."; \
+		if [ $$i -le 3 ]; then \
+			echo "  Checking ($$i/15)..."; \
+		elif [ $$(( $$i % 3 )) -eq 0 ]; then \
+			echo "  Still checking ($$i/15)..."; \
 		fi; \
 		sleep 1; \
 	done; \
-	if [ "$$success" = "false" ]; then \
-		echo "⚠️  Service health check failed after 20 seconds"; \
-		echo "💡 Try: kubectl logs -n harness-factory -l app=harness-factory"; \
+	if [ "$$SUCCESS" = "false" ]; then \
+		echo "⚠️  Service didn't respond after 15 seconds"; \
+		echo "💡 Check logs: kubectl logs -n harness-factory -l app=harness-factory"; \
+		kill $$PF_PID 2>/dev/null || true; \
 	fi
 
 # Development targets
