@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TSVAI Dashboard</title>
+  <title>TSVAI Intelligence</title>
   <style>
     * {
       margin: 0;
@@ -13,923 +13,676 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: #f5f7fa;
-      color: #2c3e50;
+      background: #0f172a;
+      color: #e2e8f0;
+      overflow: hidden;
     }
 
     .container {
       display: grid;
-      grid-template-columns: 250px 1fr;
+      grid-template-columns: 260px 1fr;
       height: 100vh;
     }
 
+    /* Sidebar */
     .sidebar {
-      background: #2c3e50;
-      color: white;
-      padding: 20px;
+      background: #1e293b;
+      border-right: 1px solid #334155;
       overflow-y: auto;
-      border-right: 1px solid #34495e;
-    }
-
-    .sidebar h1 {
-      font-size: 20px;
-      margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-section {
-      margin-bottom: 30px;
-    }
-
-    .nav-section h2 {
-      font-size: 12px;
-      text-transform: uppercase;
-      color: #95a5a6;
-      margin-bottom: 10px;
-      letter-spacing: 1px;
-    }
-
-    .nav-item {
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.3s;
-      margin-bottom: 5px;
-      font-size: 14px;
-    }
-
-    .nav-item:hover {
-      background: #34495e;
-    }
-
-    .nav-item.active {
-      background: #3498db;
-    }
-
-    .main {
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
     }
 
+    .sidebar-header {
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #f1f5f9;
+    }
+
+    .logo-subtitle {
+      font-size: 10px;
+      color: #94a3b8;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-section {
+      margin-bottom: 32px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #cbd5e1;
+      border-left: 2px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: #334155;
+      color: #f1f5f9;
+    }
+
+    .nav-item.active {
+      background: #1e40af;
+      color: #fff;
+      border-left-color: #3b82f6;
+    }
+
+    .nav-badge {
+      background: #f59e0b;
+      color: #000;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-left: auto;
+      font-weight: 600;
+    }
+
+    /* Main */
+    .main {
+      display: flex;
+      flex-direction: column;
+      background: #0f172a;
+    }
+
     .header {
-      background: white;
-      padding: 20px;
-      border-bottom: 1px solid #ecf0f1;
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 20px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .header h1 {
+    .header-title {
       font-size: 24px;
       font-weight: 600;
+      color: #f1f5f9;
     }
 
-    .header-actions {
+    .header-session {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: #94a3b8;
     }
 
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.3s;
+    .session-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
     }
 
-    .btn-primary {
-      background: #3498db;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #2980b9;
-    }
-
-    .btn-secondary {
-      background: #ecf0f1;
-      color: #2c3e50;
-    }
-
-    .btn-secondary:hover {
-      background: #d5dbdc;
-    }
-
+    /* Content */
     .content {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 32px;
     }
 
-    .dashboard-grid {
+    .page-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
     }
 
-    .widget {
-      background: white;
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .status-card {
+      background: #1e293b;
+      border: 1px solid #334155;
       border-radius: 8px;
       padding: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: box-shadow 0.3s;
+      transition: all 0.3s;
     }
 
-    .widget:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    .status-card:hover {
+      border-color: #475569;
+      background: #334155;
     }
 
-    .widget h3 {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: #34495e;
+    .status-label {
+      font-size: 12px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
     }
 
-    .widget.status.healthy {
-      border-left: 4px solid #27ae60;
-    }
-
-    .widget.status.degraded {
-      border-left: 4px solid #f39c12;
-    }
-
-    .widget.status.unhealthy {
-      border-left: 4px solid #e74c3c;
-    }
-
-    .status-badge {
-      font-size: 18px;
-      font-weight: bold;
-      padding: 10px;
-      border-radius: 4px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .status.healthy .status-badge {
-      background: #d5f4e6;
-      color: #27ae60;
-    }
-
-    .status.degraded .status-badge {
-      background: #fdebd0;
-      color: #f39c12;
-    }
-
-    .status.unhealthy .status-badge {
-      background: #fadbd8;
-      color: #e74c3c;
-    }
-
-    .gauge-container {
-      text-align: center;
-      padding: 20px;
-    }
-
-    .gauge-value {
+    .status-value {
       font-size: 36px;
-      font-weight: bold;
-      color: #3498db;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 4px;
     }
 
-    .gauge-unit {
-      font-size: 14px;
-      color: #7f8c8d;
-      margin-top: 5px;
-    }
-
-    .queue-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-    }
-
-    .stat {
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: bold;
-      color: #3498db;
-    }
-
-    .stat-label {
+    .status-sublabel {
       font-size: 12px;
-      color: #7f8c8d;
-      margin-top: 5px;
+      color: #64748b;
     }
 
-    .agent-list {
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 24px;
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      border-color: #475569;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
-    .agent-item {
-      padding: 10px;
-      border-left: 3px solid #95a5a6;
-      border-radius: 2px;
-    }
-
-    .agent-item.healthy {
-      border-left-color: #27ae60;
-      background: #f0fdf4;
-    }
-
-    .agent-item.unhealthy {
-      border-left-color: #e74c3c;
-      background: #fef2f2;
-    }
-
-    .agent-name {
+    .card-title {
+      font-size: 16px;
       font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 5px;
+      color: #f1f5f9;
     }
 
-    .agent-status {
-      font-size: 12px;
-      color: #7f8c8d;
+    .card-action {
+      color: #3b82f6;
+      cursor: pointer;
+      font-size: 13px;
+      transition: color 0.2s;
     }
 
-    .agent-uptime {
-      font-size: 11px;
-      color: #95a5a6;
-      margin-top: 3px;
+    .card-action:hover {
+      color: #60a5fa;
     }
 
-    .activity-list {
+    .item-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      max-height: 400px;
-      overflow-y: auto;
     }
 
-    .activity-item {
-      padding: 10px;
-      border-left: 2px solid #3498db;
-      border-radius: 2px;
-      background: #ecf7ff;
+    .item {
+      padding: 12px;
+      background: #0f172a;
+      border-radius: 6px;
+      border-left: 3px solid #334155;
+      transition: all 0.2s;
     }
 
-    .activity-time {
-      font-size: 11px;
-      color: #7f8c8d;
-      margin-bottom: 3px;
+    .item:hover {
+      background: #1e293b;
+      border-left-color: #3b82f6;
     }
 
-    .activity-text {
-      font-size: 13px;
-      color: #2c3e50;
+    .item-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-bottom: 4px;
     }
 
-    .chart-container {
-      background: #f9f9f9;
-      border-radius: 4px;
-      padding: 10px;
-    }
-
-    .footer {
-      background: #ecf0f1;
-      padding: 10px 20px;
-      text-align: center;
+    .item-subtitle {
       font-size: 12px;
-      color: #7f8c8d;
-      border-top: 1px solid #bdc3c7;
+      color: #94a3b8;
     }
 
-    .loading {
+    .item-status {
       display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #3498db;
-      animation: pulse 1.5s ease-in-out infinite;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 3px;
+      background: #065f46;
+      color: #86efac;
+      margin-right: 8px;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    .item-status.warning {
+      background: #7c2d12;
+      color: #fdba74;
+    }
+
+    .prototype-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .prototype-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .prototype-card:hover {
+      border-color: #3b82f6;
+      background: #1e293b;
+    }
+
+    .prototype-icon {
+      font-size: 28px;
+    }
+
+    .prototype-info {
+      flex: 1;
+    }
+
+    .prototype-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-bottom: 2px;
+    }
+
+    .prototype-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .prototype-arrow {
+      color: #3b82f6;
+      font-size: 16px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
-      <h1>📊 TSVAI Dashboard</h1>
-
-      <div class="nav-section">
-        <h2>Dashboards</h2>
-        <div class="nav-item active" data-dashboard="overview">System Overview</div>
-        <div class="nav-item" data-dashboard="agents">Agents</div>
-        <div class="nav-item" data-dashboard="knowledge">Knowledge</div>
-        <div class="nav-item" data-dashboard="activity">Activity</div>
+      <div class="sidebar-header">
+        <div class="logo">TSVAI</div>
+        <div class="logo-subtitle">Intelligence</div>
       </div>
 
       <div class="nav-section">
-        <h2>Components</h2>
-        <div class="nav-item" data-section="army-agents">🎯 Army-Agents</div>
-        <div class="nav-item" data-section="brain-wiki">🧠 Brain-Wiki</div>
-        <div class="nav-item" data-section="plugins">⚙️ Plugins</div>
-        <div class="nav-item" data-section="metrics">📈 Metrics</div>
+        <div class="nav-section-title">Navigation</div>
+        <div class="nav-item active" data-page="home">
+          <span>🏠</span> Home
+        </div>
+        <div class="nav-item" data-page="start">
+          <span>▶️</span> Start
+        </div>
       </div>
 
       <div class="nav-section">
-        <h2>Settings</h2>
-        <div class="nav-item" data-action="settings">⚙️ Configuration</div>
-        <div class="nav-item" data-action="logs">📋 Logs</div>
+        <div class="nav-section-title">Agents</div>
+        <div class="nav-item" data-page="agents">
+          <span>🎯</span> Agents
+          <span class="nav-badge">3</span>
+        </div>
+        <div class="nav-item" data-page="workload">
+          <span>📊</span> Workload
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Heartbeat</div>
+        <div class="nav-item" data-page="pulse">
+          <span>📈</span> GTM Pulse
+        </div>
+        <div class="nav-item" data-page="winston">
+          <span>🔍</span> Winston
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Knowledge</div>
+        <div class="nav-item" data-page="brain">
+          <span>🧠</span> Brain
+        </div>
+        <div class="nav-item" data-page="review">
+          <span>✅</span> Review
+        </div>
+        <div class="nav-item" data-page="changelog">
+          <span>📝</span> Changelog
+        </div>
+        <div class="nav-item" data-page="constellation">
+          <span>⭐</span> Constellation
+          <span class="nav-badge">v2</span>
+        </div>
+        <div class="nav-item" data-page="ontology">
+          <span>🏗️</span> Ontology
+        </div>
+        <div class="nav-item" data-page="environments">
+          <span>🌍</span> Environments
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Security</div>
+        <div class="nav-item" data-page="security">
+          <span>🔒</span> Lynx
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">New Ways of Working</div>
+        <div class="nav-item" data-page="pct">
+          <span>🏢</span> Product Control
+        </div>
+        <div class="nav-item" data-page="otto">
+          <span>🤖</span> Otto
+          <span class="nav-badge">WIP</span>
+        </div>
+        <div class="nav-item" data-page="vicode">
+          <span>💻</span> VI Code
+        </div>
+        <div class="nav-item" data-page="spaces">
+          <span>📐</span> Spaces
+          <span class="nav-badge">WIP</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Prototypes</div>
+        <div class="nav-item" data-page="prototypes">
+          <span>🧪</span> Prototypes
+        </div>
       </div>
     </div>
 
+    <!-- Main Content -->
     <div class="main">
       <div class="header">
-        <h1 id="page-title">System Overview</h1>
-        <div class="header-actions">
-          <button class="btn btn-secondary" id="refresh-btn">⟳ Refresh</button>
-          <button class="btn btn-primary" id="add-widget-btn">+ Add Widget</button>
+        <div class="header-title" id="page-title">Home</div>
+        <div class="header-session">
+          <div class="session-dot"></div>
+          Local session
         </div>
       </div>
 
-      <div class="content">
-        <div class="dashboard-grid" id="dashboard-grid">
-          <!-- Widgets will be loaded here -->
-        </div>
-      </div>
+      <div class="content" id="content">
+        <!-- Home Page -->
+        <div id="page-home" class="page">
+          <div class="status-grid">
+            <div class="status-card">
+              <div class="status-label">🎯 Fleet online</div>
+              <div class="status-value">3</div>
+              <div class="status-sublabel">/ 3 agent profiles</div>
+            </div>
+            <div class="status-card">
+              <div class="status-label">⚠️ Needs attention</div>
+              <div class="status-value">0</div>
+              <div class="status-sublabel">nominal</div>
+            </div>
+            <div class="status-card">
+              <div class="status-label">🔄 Restarts</div>
+              <div class="status-value">0</div>
+              <div class="status-sublabel">across the fleet</div>
+            </div>
+            <div class="status-card">
+              <div class="status-label">⏸️ Disabled</div>
+              <div class="status-value">0</div>
+              <div class="status-sublabel">all enabled</div>
+            </div>
+          </div>
 
-      <div class="footer">
-        <span id="status-indicator" class="loading"></span>
-        <span id="footer-text"> TSVAI Dashboard • Connected</span>
+          <div class="page-grid">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Agent Fleet</div>
+                <div class="card-action">Refresh</div>
+              </div>
+              <div class="item-list">
+                <div class="item">
+                  <div class="item-title">🎯 Coordinator Agent</div>
+                  <div class="item-subtitle">
+                    <span class="item-status">Healthy</span>
+                    Uptime: 5h 22m
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="item-title">📊 Analyzer Agent</div>
+                  <div class="item-subtitle">
+                    <span class="item-status">Healthy</span>
+                    Uptime: 4h 15m
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="item-title">⚡ Processor Agent</div>
+                  <div class="item-subtitle">
+                    <span class="item-status">Healthy</span>
+                    Uptime: 3h 45m
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">System Health</div>
+                <div class="card-action">Details</div>
+              </div>
+              <div style="text-align: center; padding: 20px 0;">
+                <div style="font-size: 48px; font-weight: 700; color: #10b981;">98%</div>
+                <div style="color: #94a3b8; margin-top: 8px;">Overall System Health</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Knowledge Base</div>
+                <div class="card-action">View</div>
+              </div>
+              <div class="item-list">
+                <div class="item">
+                  <div class="item-title">📚 Total Entries</div>
+                  <div class="item-subtitle">2,847 indexed</div>
+                </div>
+                <div class="item">
+                  <div class="item-title">📈 Index Coverage</div>
+                  <div class="item-subtitle">95% complete</div>
+                </div>
+                <div class="item">
+                  <div class="item-title">⏳ Pending</div>
+                  <div class="item-subtitle">156 waiting to index</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 32px;">
+            <div class="card-header">
+              <div class="card-title">Live Prototypes & Components</div>
+            </div>
+            <div class="prototype-grid">
+              <div class="prototype-card" onclick="alert('Brain Wiki - Coming Soon')">
+                <div class="prototype-icon">🧠</div>
+                <div class="prototype-info">
+                  <div class="prototype-name">Brain Wiki</div>
+                  <div class="prototype-desc">Knowledge management system</div>
+                </div>
+                <div class="prototype-arrow">›</div>
+              </div>
+              <div class="prototype-card" onclick="alert('Army Agents - Coming Soon')">
+                <div class="prototype-icon">🎯</div>
+                <div class="prototype-info">
+                  <div class="prototype-name">Army Agents</div>
+                  <div class="prototype-desc">Multi-agent coordination</div>
+                </div>
+                <div class="prototype-arrow">›</div>
+              </div>
+              <div class="prototype-card" onclick="alert('Consilient - Coming Soon')">
+                <div class="prototype-icon">🤝</div>
+                <div class="prototype-info">
+                  <div class="prototype-name">Consilient</div>
+                  <div class="prototype-desc">Consensus engine</div>
+                </div>
+                <div class="prototype-arrow">›</div>
+              </div>
+              <div class="prototype-card" onclick="alert('Harvester - Coming Soon')">
+                <div class="prototype-icon">🌾</div>
+                <div class="prototype-info">
+                  <div class="prototype-name">Harvester</div>
+                  <div class="prototype-desc">Data collection system</div>
+                </div>
+                <div class="prototype-arrow">›</div>
+              </div>
+              <div class="prototype-card" onclick="alert('Curator - Coming Soon')">
+                <div class="prototype-icon">🎨</div>
+                <div class="prototype-info">
+                  <div class="prototype-name">Curator</div>
+                  <div class="prototype-desc">Content curation</div>
+                </div>
+                <div class="prototype-arrow">›</div>
+              </div>
+              <div class="prototype-card" onclick="alert('VI Dashboard - Ready')">
+                <div class="prototype-icon">📊</div>
+                <div class="prototype-info">
+                  <div class="prototype-name">VI Dashboard</div>
+                  <div class="prototype-desc">Intelligence interface</div>
+                </div>
+                <div class="prototype-arrow">›</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Pages (Placeholder) -->
+        <div id="page-start" class="page hidden">
+          <div class="card">
+            <div class="card-title" style="margin-bottom: 20px;">Getting Started</div>
+            <div class="item-list">
+              <div class="item">
+                <div class="item-title">📖 Documentation</div>
+                <div class="item-subtitle">Read the setup guide</div>
+              </div>
+              <div class="item">
+                <div class="item-title">🚀 Deploy</div>
+                <div class="item-subtitle">Run your first workflow</div>
+              </div>
+              <div class="item">
+                <div class="item-title">💡 Examples</div>
+                <div class="item-subtitle">Explore sample projects</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Dashboard initialization and management
     class Dashboard {
       constructor() {
-        this.currentDashboard = 'overview';
-        this.widgets = [];
         this.init();
       }
 
       init() {
-        this.setupEventListeners();
-        this.loadDashboard('overview');
+        this.setupNavigation();
       }
 
-      setupEventListeners() {
-        // Dashboard navigation
-        document.querySelectorAll('[data-dashboard]').forEach(item => {
+      setupNavigation() {
+        document.querySelectorAll('.nav-item').forEach(item => {
           item.addEventListener('click', (e) => {
-            this.clearActiveItems();
-            e.target.classList.add('active');
-            this.loadDashboard(e.target.dataset.dashboard);
+            const pageName = e.currentTarget.dataset.page;
+            this.navigateTo(pageName);
           });
-        });
-
-        // Component navigation
-        document.querySelectorAll('[data-section]').forEach(item => {
-          item.addEventListener('click', (e) => {
-            this.clearActiveItems();
-            e.target.classList.add('active');
-            this.loadSection(e.target.dataset.section);
-          });
-        });
-
-        // Settings navigation
-        document.querySelectorAll('[data-action]').forEach(item => {
-          item.addEventListener('click', (e) => {
-            this.clearActiveItems();
-            e.target.classList.add('active');
-            this.loadAction(e.target.dataset.action);
-          });
-        });
-
-        document.getElementById('refresh-btn').addEventListener('click', () => {
-          this.refresh();
         });
       }
 
-      clearActiveItems() {
+      navigateTo(pageName) {
+        // Clear active states
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-      }
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
 
-      loadDashboard(name) {
+        // Set active
+        document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+        const page = document.getElementById(`page-${pageName}`);
+        if (page) {
+          page.classList.remove('hidden');
+        }
+
+        // Update title
         const titles = {
-          overview: 'System Overview',
+          home: 'Home',
+          start: 'Start',
           agents: 'Agents',
-          knowledge: 'Knowledge',
-          activity: 'Activity'
+          workload: 'Workload',
+          pulse: 'GTM Pulse',
+          winston: 'Winston',
+          brain: 'Brain',
+          review: 'Review',
+          changelog: 'Changelog',
+          constellation: 'Constellation',
+          ontology: 'Ontology',
+          environments: 'Environments',
+          security: 'Security',
+          pct: 'Product Control',
+          otto: 'Otto',
+          vicode: 'VI Code',
+          spaces: 'Spaces',
+          prototypes: 'Prototypes'
         };
-
-        document.getElementById('page-title').textContent = titles[name] || name;
-        this.currentDashboard = name;
-        this.loadWidgets();
-      }
-
-      loadSection(section) {
-        const titles = {
-          'army-agents': '🎯 Army-Agents',
-          'brain-wiki': '🧠 Brain-Wiki',
-          'plugins': '⚙️ Plugins',
-          'metrics': '📈 Metrics'
-        };
-
-        document.getElementById('page-title').textContent = titles[section] || section;
-        this.loadSectionWidgets(section);
-      }
-
-      loadAction(action) {
-        const titles = {
-          'settings': '⚙️ Configuration',
-          'logs': '📋 Logs'
-        };
-
-        document.getElementById('page-title').textContent = titles[action] || action;
-        this.loadActionWidgets(action);
-      }
-
-      loadSectionWidgets(section) {
-        const grid = document.getElementById('dashboard-grid');
-        grid.innerHTML = '';
-
-        const sectionWidgets = {
-          'army-agents': [
-            {
-              type: 'agent-status',
-              html: `
-                <h3>Active Agents</h3>
-                <div class="agent-list">
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Coordinator Agent</div>
-                    <div class="agent-status">Healthy • Running</div>
-                    <div class="agent-uptime">Uptime: 3h 22m</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Analyzer Agent</div>
-                    <div class="agent-status">Healthy • Running</div>
-                    <div class="agent-uptime">Uptime: 2h 15m</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Processor Agent</div>
-                    <div class="agent-status">Healthy • Idle</div>
-                    <div class="agent-uptime">Uptime: 1h 45m</div>
-                  </div>
-                </div>
-              `
-            },
-            {
-              type: 'gauge',
-              html: `
-                <h3>Agent Health Score</h3>
-                <div class="gauge-container">
-                  <div class="gauge-value">96</div>
-                  <div class="gauge-unit">%</div>
-                </div>
-              `
-            }
-          ],
-          'brain-wiki': [
-            {
-              type: 'status healthy',
-              html: `
-                <h3>Knowledge Base Status</h3>
-                <div class="status-badge">Ready</div>
-                <div class="status-message">Database connected</div>
-              `
-            },
-            {
-              type: 'gauge',
-              html: `
-                <h3>Total Knowledge Entries</h3>
-                <div class="gauge-container">
-                  <div class="gauge-value">1,247</div>
-                  <div class="gauge-unit">entries</div>
-                </div>
-              `
-            },
-            {
-              type: 'task-queue',
-              html: `
-                <h3>Index Stats</h3>
-                <div class="queue-stats">
-                  <div class="stat">
-                    <div class="stat-value">1,247</div>
-                    <div class="stat-label">Indexed</div>
-                  </div>
-                  <div class="stat">
-                    <div class="stat-value">34</div>
-                    <div class="stat-label">Pending</div>
-                  </div>
-                  <div class="stat">
-                    <div class="stat-value">98%</div>
-                    <div class="stat-label">Coverage</div>
-                  </div>
-                </div>
-              `
-            }
-          ],
-          'plugins': [
-            {
-              type: 'status healthy',
-              html: `
-                <h3>Installed Plugins</h3>
-                <div class="agent-list">
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Data Processor Plugin</div>
-                    <div class="agent-status">Active • v1.2.0</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Analytics Plugin</div>
-                    <div class="agent-status">Active • v1.0.5</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">API Gateway Plugin</div>
-                    <div class="agent-status">Active • v2.1.0</div>
-                  </div>
-                </div>
-              `
-            }
-          ],
-          'metrics': [
-            {
-              type: 'gauge',
-              html: `
-                <h3>CPU Usage</h3>
-                <div class="gauge-container">
-                  <div class="gauge-value">34</div>
-                  <div class="gauge-unit">%</div>
-                </div>
-              `
-            },
-            {
-              type: 'gauge',
-              html: `
-                <h3>Memory Usage</h3>
-                <div class="gauge-container">
-                  <div class="gauge-value">52</div>
-                  <div class="gauge-unit">%</div>
-                </div>
-              `
-            },
-            {
-              type: 'task-queue',
-              html: `
-                <h3>Requests/sec</h3>
-                <div class="queue-stats">
-                  <div class="stat">
-                    <div class="stat-value">2,341</div>
-                    <div class="stat-label">API Calls</div>
-                  </div>
-                  <div class="stat">
-                    <div class="stat-value">98.2%</div>
-                    <div class="stat-label">Success Rate</div>
-                  </div>
-                  <div class="stat">
-                    <div class="stat-value">45ms</div>
-                    <div class="stat-label">Avg Latency</div>
-                  </div>
-                </div>
-              `
-            }
-          ]
-        };
-
-        const widgets = sectionWidgets[section] || [];
-        widgets.forEach(widget => {
-          const el = document.createElement('div');
-          el.className = `widget ${widget.type}`;
-          el.innerHTML = widget.html;
-          grid.appendChild(el);
-        });
-      }
-
-      loadActionWidgets(action) {
-        const grid = document.getElementById('dashboard-grid');
-        grid.innerHTML = '';
-
-        const actionWidgets = {
-          'settings': [
-            {
-              type: 'status healthy',
-              html: `
-                <h3>Configuration</h3>
-                <div style="padding: 10px; background: #f9f9f9; border-radius: 4px; font-family: monospace; font-size: 12px;">
-                  <div><strong>Environment:</strong> production</div>
-                  <div><strong>API Version:</strong> v1.0.0</div>
-                  <div><strong>Node Version:</strong> v18.14.0</div>
-                  <div><strong>Database:</strong> Connected</div>
-                  <div><strong>Cache:</strong> Redis (127.0.0.1:6379)</div>
-                </div>
-              `
-            },
-            {
-              type: 'status healthy',
-              html: `
-                <h3>Feature Flags</h3>
-                <div class="agent-list">
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Advanced Analytics</div>
-                    <div class="agent-status">Enabled</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Real-time Monitoring</div>
-                    <div class="agent-status">Enabled</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Auto-scaling</div>
-                    <div class="agent-status">Enabled</div>
-                  </div>
-                </div>
-              `
-            }
-          ],
-          'logs': [
-            {
-              type: 'activity',
-              html: `
-                <h3>System Logs</h3>
-                <div class="activity-list">
-                  <div class="activity-item">
-                    <div class="activity-time">Just now</div>
-                    <div class="activity-text">✓ Workflow execution completed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">2 min ago</div>
-                    <div class="activity-text">✓ Agent heartbeat received</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">5 min ago</div>
-                    <div class="activity-text">✓ Knowledge entry indexed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">8 min ago</div>
-                    <div class="activity-text">✓ API request processed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">12 min ago</div>
-                    <div class="activity-text">✓ Cache cleared</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">15 min ago</div>
-                    <div class="activity-text">✓ Database backup completed</div>
-                  </div>
-                </div>
-              `
-            }
-          ]
-        };
-
-        const widgets = actionWidgets[action] || [];
-        widgets.forEach(widget => {
-          const el = document.createElement('div');
-          el.className = `widget ${widget.type}`;
-          el.innerHTML = widget.html;
-          grid.appendChild(el);
-        });
-      }
-
-      loadWidgets() {
-        const grid = document.getElementById('dashboard-grid');
-        grid.innerHTML = '';
-
-        // Get widgets based on current dashboard
-        const widgets = this.getWidgetsForDashboard(this.currentDashboard);
-
-        widgets.forEach(widget => {
-          const el = document.createElement('div');
-          el.className = `widget ${widget.type}`;
-          el.innerHTML = widget.html;
-          grid.appendChild(el);
-        });
-      }
-
-      getWidgetsForDashboard(dashboard) {
-        const dashboards = {
-          overview: [
-            {
-              type: 'status healthy',
-              html: `
-                <h3>System Status</h3>
-                <div class="status-badge">Healthy</div>
-                <div class="status-message">All systems operational</div>
-              `
-            },
-            {
-              type: 'gauge',
-              html: `
-                <h3>Health Score</h3>
-                <div class="gauge-container">
-                  <div class="gauge-value">94</div>
-                  <div class="gauge-unit">%</div>
-                </div>
-              `
-            },
-            {
-              type: 'task-queue',
-              html: `
-                <h3>Task Queue</h3>
-                <div class="queue-stats">
-                  <div class="stat">
-                    <div class="stat-value">12</div>
-                    <div class="stat-label">Pending</div>
-                  </div>
-                  <div class="stat">
-                    <div class="stat-value">3</div>
-                    <div class="stat-label">Running</div>
-                  </div>
-                  <div class="stat">
-                    <div class="stat-value">287</div>
-                    <div class="stat-label">Completed</div>
-                  </div>
-                </div>
-              `
-            },
-            {
-              type: 'agent-status',
-              html: `
-                <h3>Agent Status</h3>
-                <div class="agent-list">
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Analyzer Agent</div>
-                    <div class="agent-status">Healthy • 2h 34m</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">Processor Agent</div>
-                    <div class="agent-status">Healthy • 1h 12m</div>
-                  </div>
-                </div>
-              `
-            },
-            {
-              type: 'activity',
-              html: `
-                <h3>Recent Activity</h3>
-                <div class="activity-list">
-                  <div class="activity-item">
-                    <div class="activity-time">2 min ago</div>
-                    <div class="activity-text">Workflow execution completed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">5 min ago</div>
-                    <div class="activity-text">New knowledge entry indexed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">12 min ago</div>
-                    <div class="activity-text">Agent registered: Curator</div>
-                  </div>
-                </div>
-              `
-            }
-          ],
-          agents: [
-            {
-              type: 'status healthy',
-              html: `
-                <h3>Agent Fleet Status</h3>
-                <div class="status-badge">Healthy</div>
-                <div class="status-message">All agents operational</div>
-              `
-            },
-            {
-              type: 'agent-status',
-              html: `
-                <h3>Active Agents</h3>
-                <div class="agent-list">
-                  <div class="agent-item healthy">
-                    <div class="agent-name">🎯 Coordinator Agent</div>
-                    <div class="agent-status">Healthy • Running</div>
-                    <div class="agent-uptime">Uptime: 5h 22m</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">📊 Analyzer Agent</div>
-                    <div class="agent-status">Healthy • Running</div>
-                    <div class="agent-uptime">Uptime: 4h 15m</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">⚡ Processor Agent</div>
-                    <div class="agent-status">Healthy • Idle</div>
-                    <div class="agent-uptime">Uptime: 3h 45m</div>
-                  </div>
-                  <div class="agent-item healthy">
-                    <div class="agent-name">🔍 Monitor Agent</div>
-                    <div class="agent-status">Healthy • Running</div>
-                    <div class="agent-uptime">Uptime: 2h 30m</div>
-                  </div>
-                </div>
-              `
-            },
-            {
-              type: 'gauge',
-              html: `
-                <h3>Agent Health Score</h3>
-                <div class="gauge-container">
-                  <div class="gauge-value">98</div>
-                  <div class="gauge-unit">%</div>
-                </div>
-              `
-            }
-          ],
-          knowledge: [
-            {
-              type: 'status healthy',
-              html: `
-                <h3>Knowledge Base</h3>
-                <div class="status-badge">Ready</div>
-                <div class="status-message">Database connected</div>
-              `
-            },
-            {
-              type: 'gauge',
-              html: `
-                <h3>Total Knowledge Entries</h3>
-                <div class="gauge-container">
-                  <div class="gauge-value">2,847</div>
-                  <div class="gauge-unit">entries</div>
-                </div>
-              `
-            },
-            {
-              type: 'task-queue',
-              html: `
-                <h3>Index Statistics</h3>
-                <div class="queue-stats">
-                  <div class="stat">
-                    <div class="stat-value">2,847</div>
-                    <div class="stat-label">Indexed</div>
-                  </div>
-                  <div class="stat">
-                    <div class="stat-value">156</div>
-                    <div class="stat-label">Pending</div>
-                  </div>
-                  <div class="stat">
-                    <div class="stat-value">95%</div>
-                    <div class="stat-label">Coverage</div>
-                  </div>
-                </div>
-              `
-            }
-          ],
-          activity: [
-            {
-              type: 'activity',
-              html: `
-                <h3>System Activity Log</h3>
-                <div class="activity-list">
-                  <div class="activity-item">
-                    <div class="activity-time">Just now</div>
-                    <div class="activity-text">✓ Workflow execution completed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">1 min ago</div>
-                    <div class="activity-text">✓ Agent heartbeat received</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">3 min ago</div>
-                    <div class="activity-text">✓ New knowledge entry indexed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">5 min ago</div>
-                    <div class="activity-text">✓ API request processed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">8 min ago</div>
-                    <div class="activity-text">✓ Cache cleared</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">12 min ago</div>
-                    <div class="activity-text">✓ Database backup completed</div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-time">15 min ago</div>
-                    <div class="activity-text">✓ Agent registered: Curator</div>
-                  </div>
-                </div>
-              `
-            }
-          ]
-        };
-
-        return dashboards[dashboard] || dashboards.overview;
-      }
-
-      refresh() {
-        this.loadWidgets();
-        document.getElementById('status-indicator').style.animation = 'pulse 0.5s';
-        setTimeout(() => {
-          document.getElementById('status-indicator').style.animation = 'pulse 1.5s';
-        }, 500);
+        document.getElementById('page-title').textContent = titles[pageName] || pageName;
       }
     }
 
-    // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
       new Dashboard();
     });
