@@ -14,7 +14,9 @@ help:
 	@echo "  make logs            - View pod logs (live)"
 	@echo "  make status          - Check deployment status"
 	@echo "  make health          - Check system health"
-	@echo "  make dashboard       - Open dashboard in browser (requires port-forward)"
+	@echo "  make dashboard       - Open dashboard (port-forward to :8080)"
+@echo "  make dashboard-quick - Open dashboard (direct to :30000 - faster)"
+@echo "  make port-forward    - Manual port-forward (localhost:8080)"
 	@echo ""
 	@echo "Development:"
 	@echo "  make install         - Install npm dependencies"
@@ -92,10 +94,30 @@ health:
 
 dashboard:
 	@echo "📊 Opening Dashboard..."
+	@echo "⏳ Waiting for service to be ready..."
+	@until kubectl get pods -n harness-factory -l app=harness-factory -o jsonpath='{.items[0].status.conditions[?(@.type=="Ready")].status}' 2>/dev/null | grep -q "True"; do \
+		echo "  Waiting for pod to be ready..."; \
+		sleep 1; \
+	done
+	@echo "✅ Pod is ready!"
+	@echo "🔌 Starting port-forward on port 8080..."
 	@kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
-	sleep 2 && \
-	open http://localhost:8080 && \
-	echo "✅ Dashboard opened (running on localhost:8080)"
+	sleep 3 && \
+	echo "✅ Waiting for service to respond..." && \
+	for i in {1..10}; do \
+		if curl -s http://localhost:8080 > /dev/null 2>&1; then \
+			echo "✅ Service is responding!"; \
+			open http://localhost:8080 && \
+			echo "✅ Dashboard opened (running on localhost:8080)"; \
+			break; \
+		fi; \
+		if [ $$i -eq 10 ]; then \
+			echo "⚠️  Service not responding yet, trying to open anyway..."; \
+			open http://localhost:8080; \
+			echo "✅ Dashboard opened (running on localhost:8080)"; \
+		fi; \
+		sleep 1; \
+	done
 
 # Development targets
 install:
@@ -146,6 +168,16 @@ db-backup:
 	@echo "✅ Backup created"
 
 # Quick access shortcuts
+dashboard-quick:
+	@echo "📊 Opening Dashboard (quick - via NodePort)..."
+	@until kubectl get pods -n harness-factory -l app=harness-factory -o jsonpath='{.items[0].status.conditions[?(@.type=="Ready")].status}' 2>/dev/null | grep -q "True"; do \
+		echo "  Waiting for pod to be ready..."; \
+		sleep 1; \
+	done
+	@echo "✅ Pod is ready!"
+	@open http://localhost:30000 && \
+	echo "✅ Dashboard opened (running on localhost:30000)"
+
 port-forward:
 	@echo "🔌 Starting port-forward on port 8080..."
 	@echo "Access dashboard at: http://localhost:8080"
