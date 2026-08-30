@@ -101,11 +101,11 @@ dashboard:
 	done
 	@echo "✅ Pod is ready!"
 	@echo "🔌 Starting port-forward on port 8080..."
-	@kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
-	sleep 5 && \
+	@pf_pid=$$(kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & echo $$!); \
+	sleep 8 && \
 	echo "✅ Waiting for service to respond..." && \
 	success=false; \
-	for i in {1..15}; do \
+	for i in {1..20}; do \
 		if curl -s -f http://localhost:8080 > /dev/null 2>&1; then \
 			echo "✅ Service is responding!"; \
 			open http://localhost:8080; \
@@ -113,14 +113,18 @@ dashboard:
 			success=true; \
 			break; \
 		fi; \
-		echo "  Attempt $$i/15 - retrying..."; \
+		if [ $$i -le 5 ]; then \
+			echo "  Checking service ($$i/20)..."; \
+		elif [ $$(( $$i % 5 )) -eq 0 ]; then \
+			echo "  Still waiting ($$i/20)..."; \
+		fi; \
 		sleep 1; \
 	done; \
 	if [ "$$success" = "false" ]; then \
-		echo "⚠️  Service taking longer to start, but opening browser..."; \
+		echo "⚠️  Service taking longer to start (possibly first deployment)..."; \
 		open http://localhost:8080; \
 		echo "✅ Dashboard opened (running on localhost:8080)"; \
-		echo "💡 If page doesn't load, wait a few more seconds and refresh"; \
+		echo "💡 Page may take 10-15 seconds to load. Refresh if needed."; \
 	fi
 
 # Development targets
