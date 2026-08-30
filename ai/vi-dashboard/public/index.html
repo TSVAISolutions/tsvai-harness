@@ -1555,13 +1555,149 @@ harness-factory/
         };
         document.getElementById('page-title').textContent = titles[pageName] || pageName;
 
-        // Adjust content padding for otto page
+        // Adjust content padding for special pages
         const content = document.getElementById('content');
-        if (pageName === 'otto') {
+        if (pageName === 'otto' || pageName === 'constellation') {
           content.style.padding = '0';
         } else {
           content.style.padding = '32px';
         }
+
+        // Initialize constellation visualization
+        if (pageName === 'constellation') {
+          setTimeout(() => this.initConstellation(), 100);
+        }
+      }
+
+      initConstellation() {
+        const canvas = document.getElementById('constellation-canvas');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+
+        const nodes = [
+          { id: 'harness', label: 'Harness Core', category: 'core', desc: 'Central orchestration' },
+          { id: 'brain', label: 'Brain-Wiki', category: 'core', desc: 'Knowledge base' },
+          { id: 'army', label: 'Army-Agents', category: 'core', desc: 'Agent coordination' },
+          { id: 'consilient', label: 'Consilient', category: 'core', desc: 'Consensus engine' },
+          { id: 'harvester', label: 'Harvester', category: 'service', desc: 'Data collection' },
+          { id: 'curator', label: 'Curator', category: 'service', desc: 'Content curation' },
+          { id: 'plugin', label: 'Plugin System', category: 'integration', desc: 'Extensions' },
+          { id: 'cli', label: 'CLI', category: 'integration', desc: 'Command-line' },
+          { id: 'api', label: 'REST APIs', category: 'integration', desc: 'API endpoints' },
+          { id: 'dashboard', label: 'Dashboard', category: 'core', desc: 'UI interface' },
+          { id: 'k8s', label: 'Kubernetes', category: 'integration', desc: 'Orchestration' },
+        ];
+
+        const edges = [
+          { from: 'harness', to: 'brain' }, { from: 'harness', to: 'army' },
+          { from: 'harness', to: 'consilient' }, { from: 'harness', to: 'dashboard' },
+          { from: 'brain', to: 'harvester' }, { from: 'army', to: 'curator' },
+          { from: 'consilient', to: 'curator' }, { from: 'harness', to: 'plugin' },
+          { from: 'harness', to: 'cli' }, { from: 'harness', to: 'api' },
+          { from: 'plugin', to: 'k8s' }, { from: 'api', to: 'k8s' },
+          { from: 'dashboard', to: 'api' },
+        ];
+
+        nodes.forEach(node => {
+          node.x = Math.random() * canvas.width;
+          node.y = Math.random() * canvas.height;
+          node.vx = (Math.random() - 0.5) * 2;
+          node.vy = (Math.random() - 0.5) * 2;
+        });
+
+        const colors = { core: '#3b82f6', service: '#10b981', integration: '#f59e0b' };
+        const tooltip = document.getElementById('constellation-tooltip');
+        let hoveredNode = null;
+
+        canvas.addEventListener('mousemove', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const mouseX = e.clientX - rect.left;
+          const mouseY = e.clientY - rect.top;
+          hoveredNode = null;
+          for (let node of nodes) {
+            const dx = node.x - mouseX, dy = node.y - mouseY;
+            if (Math.sqrt(dx*dx + dy*dy) < 20) {
+              hoveredNode = node;
+              tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
+              tooltip.style.top = (e.clientY - rect.top + 10) + 'px';
+              document.getElementById('tooltip-name').textContent = node.label;
+              document.getElementById('tooltip-desc').textContent = node.desc;
+              tooltip.style.display = 'block';
+              break;
+            }
+          }
+          if (!hoveredNode) tooltip.style.display = 'none';
+        });
+
+        const animate = () => {
+          const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-primary').trim();
+          ctx.fillStyle = bgColor || '#0f172a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          for (let i = 0; i < nodes.length; i++) {
+            let fx = 0, fy = 0;
+            for (let j = 0; j < nodes.length; j++) {
+              if (i !== j) {
+                const dx = nodes[j].x - nodes[i].x;
+                const dy = nodes[j].y - nodes[i].y;
+                const dist = Math.sqrt(dx*dx + dy*dy) + 1;
+                const force = 50000 / (dist * dist);
+                fx -= (force * dx) / dist;
+                fy -= (force * dy) / dist;
+              }
+            }
+            for (let edge of edges) {
+              if (edge.from === nodes[i].id) {
+                const target = nodes.find(n => n.id === edge.to);
+                const dx = target.x - nodes[i].x, dy = target.y - nodes[i].y;
+                const dist = Math.sqrt(dx*dx + dy*dy) + 1;
+                const force = (dist - 80) * 0.1;
+                fx += (force * dx) / dist;
+                fy += (force * dy) / dist;
+              }
+            }
+            fx += (canvas.width/2 - nodes[i].x) * 0.01;
+            fy += (canvas.height/2 - nodes[i].y) * 0.01;
+            nodes[i].vx = (nodes[i].vx + fx * 0.01) * 0.95;
+            nodes[i].vy = (nodes[i].vy + fy * 0.01) * 0.95;
+            nodes[i].x += nodes[i].vx;
+            nodes[i].y += nodes[i].vy;
+            if (nodes[i].x < 30) nodes[i].x = 30;
+            if (nodes[i].x > canvas.width - 30) nodes[i].x = canvas.width - 30;
+            if (nodes[i].y < 30) nodes[i].y = 30;
+            if (nodes[i].y > canvas.height - 30) nodes[i].y = canvas.height - 30;
+          }
+
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+          ctx.lineWidth = 1;
+          for (let edge of edges) {
+            const from = nodes.find(n => n.id === edge.from);
+            const to = nodes.find(n => n.id === edge.to);
+            ctx.beginPath();
+            ctx.moveTo(from.x, from.y);
+            ctx.lineTo(to.x, to.y);
+            ctx.stroke();
+          }
+
+          for (let node of nodes) {
+            const isHovered = hoveredNode && hoveredNode.id === node.id;
+            const radius = isHovered ? 16 : 12;
+            ctx.fillStyle = colors[node.category];
+            ctx.globalAlpha = isHovered ? 1 : 0.8;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          }
+
+          requestAnimationFrame(animate);
+        };
+
+        animate();
       }
     }
 
