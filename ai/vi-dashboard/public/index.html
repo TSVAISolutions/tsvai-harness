@@ -1351,6 +1351,44 @@ harness-factory/
               </ul>
             </div>
           </div>
+
+        <!-- Constellation Network Visualization Page -->
+        <div id="page-constellation" class="page hidden" style="display: flex; flex-direction: column; padding: 0;">
+          <div style="padding: 32px; border-bottom: 1px solid var(--bg-tertiary);">
+            <div style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">⭐ Constellation</div>
+            <div style="font-size: 14px; color: var(--text-tertiary);">Harness Factory Architecture Visualization</div>
+          </div>
+
+          <div style="flex: 1; position: relative; overflow: hidden;">
+            <canvas id="constellation-canvas" style="width: 100%; height: 100%; display: block; background: var(--bg-primary);"></canvas>
+            
+            <div style="position: absolute; bottom: 20px; left: 20px; background: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--text-secondary); max-width: 250px;">
+              <div style="font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">Legend</div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%;"></div>
+                  <span>Core Components</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+                  <span>Services</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%;"></div>
+                  <span>Integration Points</span>
+                </div>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--bg-tertiary); font-size: 11px; color: var(--text-tertiary);">
+                  💡 Hover over nodes for details
+                </div>
+              </div>
+            </div>
+
+            <div id="constellation-tooltip" style="position: absolute; background: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 6px; padding: 8px 12px; font-size: 12px; color: var(--text-primary); pointer-events: none; display: none; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+              <div id="tooltip-name" style="font-weight: 600; margin-bottom: 4px;"></div>
+              <div id="tooltip-desc" style="color: var(--text-tertiary); font-size: 11px;"></div>
+            </div>
+          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -1512,7 +1550,8 @@ harness-factory/
           prototypes: 'Prototypes',
           github: 'GitHub Integration',
           atlassian: 'Atlassian Integration',
-          vchannel: 'V-Channel'
+          vchannel: 'V-Channel',
+          constellation: 'Constellation'
         };
         document.getElementById('page-title').textContent = titles[pageName] || pageName;
 
