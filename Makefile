@@ -102,22 +102,26 @@ dashboard:
 	@echo "✅ Pod is ready!"
 	@echo "🔌 Starting port-forward on port 8080..."
 	@kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & \
-	sleep 3 && \
+	sleep 5 && \
 	echo "✅ Waiting for service to respond..." && \
-	for i in {1..10}; do \
-		if curl -s http://localhost:8080 > /dev/null 2>&1; then \
+	success=false; \
+	for i in {1..15}; do \
+		if curl -s -f http://localhost:8080 > /dev/null 2>&1; then \
 			echo "✅ Service is responding!"; \
-			open http://localhost:8080 && \
-			echo "✅ Dashboard opened (running on localhost:8080)"; \
-			break; \
-		fi; \
-		if [ $$i -eq 10 ]; then \
-			echo "⚠️  Service not responding yet, trying to open anyway..."; \
 			open http://localhost:8080; \
 			echo "✅ Dashboard opened (running on localhost:8080)"; \
+			success=true; \
+			break; \
 		fi; \
+		echo "  Attempt $$i/15 - retrying..."; \
 		sleep 1; \
-	done
+	done; \
+	if [ "$$success" = "false" ]; then \
+		echo "⚠️  Service taking longer to start, but opening browser..."; \
+		open http://localhost:8080; \
+		echo "✅ Dashboard opened (running on localhost:8080)"; \
+		echo "💡 If page doesn't load, wait a few more seconds and refresh"; \
+	fi
 
 # Development targets
 install:
