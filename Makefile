@@ -102,10 +102,10 @@ dashboard:
 	@echo "✅ Pod is ready!"
 	@echo "🔌 Starting port-forward on port 8080..."
 	@pf_pid=$$(kubectl port-forward -n harness-factory svc/harness-factory-api 8080:3000 > /dev/null 2>&1 & echo $$!); \
-	sleep 10 && \
+	sleep 12 && \
 	echo "✅ Waiting for service to be fully ready..." && \
 	success=false; \
-	for i in {1..35}; do \
+	for i in {1..50}; do \
 		if curl -s -f http://localhost:8080/api/health > /dev/null 2>&1; then \
 			echo "✅ Service is fully ready!"; \
 			open http://localhost:8080; \
@@ -114,15 +114,15 @@ dashboard:
 			break; \
 		fi; \
 		if [ $$i -le 5 ]; then \
-			echo "  Checking readiness ($$i/35)..."; \
-		elif [ $$(( $$i % 5 )) -eq 0 ]; then \
-			echo "  Still waiting ($$i/35)..."; \
+			echo "  Checking readiness ($$i/50)..."; \
+		elif [ $$(( $$i % 10 )) -eq 0 ]; then \
+			echo "  Still waiting ($$i/50)..."; \
 		fi; \
 		sleep 1; \
 	done; \
 	if [ "$$success" = "false" ]; then \
-		echo "⚠️  Service initialization taking longer than expected..."; \
-		echo "💡 Try running: make dashboard again in a few seconds"; \
+		echo "⚠️  Service taking longer than 60+ seconds to start..."; \
+		echo "💡 This is unusual. Try: kubectl logs -n harness-factory -l app=harness-factory"; \
 	fi
 
 # Development targets
