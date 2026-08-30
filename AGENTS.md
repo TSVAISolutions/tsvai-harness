@@ -14,4 +14,3 @@
 
 | Agent | Area | Task | Since | Last Update |
 |-------|------|------|-------|-------------|
-| claude-haiku-4-5 | ai/vi-dashboard | Fix dashboard startup and port-forward issues | 2026-08-30T00:00:00Z | 2026-08-30T00:15:00Z |
