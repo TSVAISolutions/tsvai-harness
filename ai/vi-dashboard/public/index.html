@@ -450,6 +450,11 @@
     <div class="main">
       <div class="header">
         <div class="header-title" id="page-title">Home</div>
+        <div class="theme-toggle" style="display: flex; gap: 8px; margin-right: 20px;">
+          <button style="background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;" data-theme="light">☀️ Light</button>
+          <button style="background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;" data-theme="dark">🌙 Dark</button>
+          <button style="background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;" data-theme="system">⚙️ System</button>
+        </div>
         <div class="header-session">
           <div class="session-dot"></div>
           Local session
@@ -756,16 +761,16 @@
             <div class="card" style="height: 100%; overflow-y: auto;">
               <div style="margin-bottom: 16px;">
                 <input type="text" placeholder="Search pages..."
-                  style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px; color: #e2e8f0; font-size: 12px;">
+                  style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px; color: #e2e8f0; font-size: 12px;" id="brain-search">
               </div>
 
               <div style="margin-bottom: 20px;">
                 <div style="font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 8px; font-weight: 600;">Architecture</div>
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                  <div style="padding: 8px; background: #0f172a; border-radius: 4px; cursor: pointer; color: #f1f5f9; border-left: 3px solid #3b82f6;">📦 harness</div>
-                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">📋 platform-overview</div>
-                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">📋 platform-repos</div>
-                  <div style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🎯 integration</div>
+                  <div class="brain-page" data-page="harness" style="padding: 8px; background: #0f172a; border-radius: 4px; cursor: pointer; color: #f1f5f9; border-left: 3px solid #3b82f6;">📦 harness</div>
+                  <div class="brain-page" data-page="platform-overview" style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">📋 platform-overview</div>
+                  <div class="brain-page" data-page="platform-repos" style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">📋 platform-repos</div>
+                  <div class="brain-page" data-page="integration" style="padding: 8px; color: #94a3b8; cursor: pointer; border-radius: 4px; font-size: 13px;">🎯 integration</div>
                 </div>
               </div>
 
@@ -901,6 +906,70 @@ harness-factory/
             this.navigateTo(pageName);
           });
         });
+
+        // Brain page navigation
+        document.querySelectorAll('.brain-page').forEach(item => {
+          item.addEventListener('click', (e) => {
+            const pageName = e.currentTarget.dataset.page;
+            this.loadBrainPage(pageName);
+
+            // Update active state
+            document.querySelectorAll('.brain-page').forEach(p => {
+              p.style.color = '#94a3b8';
+              p.style.background = 'transparent';
+              p.style.borderLeft = '3px solid transparent';
+            });
+            e.currentTarget.style.color = '#f1f5f9';
+            e.currentTarget.style.background = '#0f172a';
+            e.currentTarget.style.borderLeft = '3px solid #3b82f6';
+          });
+        });
+
+        // Theme toggle
+        document.querySelectorAll('[data-theme]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const theme = e.currentTarget.dataset.theme;
+            this.setTheme(theme);
+          });
+        });
+      }
+
+      loadBrainPage(pageName) {
+        const titles = {
+          'harness': 'Harness Factory',
+          'platform-overview': 'Platform Overview',
+          'platform-repos': 'Platform Repositories',
+          'integration': 'Integration Guide'
+        };
+
+        const contents = {
+          'harness': '<h2 style="font-size: 32px; font-weight: 700; color: #f1f5f9; margin-bottom: 20px;">Harness Factory</h2><p style="color: #cbd5e1; line-height: 1.8;">The central orchestration system for the entire Harness Factory ecosystem. Provides unified monorepo access, AI layer integration, and multi-agent coordination.</p>',
+          'platform-overview': '<h2 style="font-size: 32px; font-weight: 700; color: #f1f5f9; margin-bottom: 20px;">Platform Overview</h2><p style="color: #cbd5e1; line-height: 1.8;">Complete architecture overview including frontend, backend, and platform infrastructure components. Understand the full stack from web UI to cloud deployment.</p>',
+          'platform-repos': '<h2 style="font-size: 32px; font-weight: 700; color: #f1f5f9; margin-bottom: 20px;">Platform Repositories</h2><p style="color: #cbd5e1; line-height: 1.8;">All available repositories organized by category. Clone, fork, or contribute to any of our open source projects. Complete documentation for each repo.</p>',
+          'integration': '<h2 style="font-size: 32px; font-weight: 700; color: #f1f5f9; margin-bottom: 20px;">Integration Guide</h2><p style="color: #cbd5e1; line-height: 1.8;">Learn how to integrate Harness Factory with your existing systems. APIs, webhooks, and plugin development guides available.</p>'
+        };
+
+        const contentDiv = document.querySelector('.card') || document.querySelector('[id*="content"]');
+        if (contentDiv) {
+          const mainContent = contentDiv.querySelector('[style*="margin-bottom: 16px"]')?.parentElement || contentDiv;
+          if (mainContent && mainContent !== contentDiv) {
+            mainContent.innerHTML = contents[pageName] || contents['harness'];
+          }
+        }
+      }
+
+      setTheme(theme) {
+        if (theme === 'light') {
+          document.body.style.background = '#ffffff';
+          document.body.style.color = '#1f2937';
+        } else if (theme === 'dark') {
+          document.body.style.background = '#0f172a';
+          document.body.style.color = '#e2e8f0';
+        } else {
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.body.style.background = prefersDark ? '#0f172a' : '#ffffff';
+          document.body.style.color = prefersDark ? '#e2e8f0' : '#1f2937';
+        }
       }
 
       navigateTo(pageName) {
