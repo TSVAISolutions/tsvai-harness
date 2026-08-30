@@ -1,4 +1,4 @@
-.PHONY: help up down restart logs status health test clean install dev
+.PHONY: help up down restart logs status health test clean install dev build rebuild rebuild-no-cache reset dashboard dashboard-quick port-forward shell describe k8s-info db-backup
 
 # Default target
 help:
@@ -175,8 +175,7 @@ dashboard-quick:
 		sleep 1; \
 	done
 	@echo "✅ Pod is ready!"
-	@open http://localhost:30000 && \
-	echo "✅ Dashboard opened (running on localhost:30000)"
+	@open http://localhost:30000; echo "✅ Dashboard opened (running on localhost:30000)"
 
 port-forward:
 	@echo "🔌 Starting port-forward on port 8080..."
